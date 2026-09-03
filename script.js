@@ -45,6 +45,18 @@ function formatCurrency(amount) {
   return new Intl.NumberFormat(CURRENCY_LOCALE, { style: 'currency', currency: CURRENCY, maximumFractionDigits: numeric % 1 === 0 ? 0 : 2 }).format(numeric);
 }
 
+/* ---------- N8N LEAD WEBHOOK (production mode) ---------- */
+const N8N_WEBHOOK_URL = 'http://localhost:5678/webhook-test/webempire-lead';
+
+function sendLeadToN8N(payload) {
+  if (!navigator.onLine) return;
+  fetch(N8N_WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ evento: 'NUEVO_LEAD', source: 'webempire', ts: Date.now(), ...payload })
+  }).catch(() => {});
+}
+
 /* ---------- UTILITIES ---------- */
 function debounce(fn, delay = 300) {
   let timer = null;
@@ -454,6 +466,7 @@ function bindAuth() {
       const user = { id: 'user_' + Date.now(), name, email, password, role, category: category || null, bio: '', favorites: [], onboardingComplete: false, plan: 'free', createdAt: Date.now() };
       store.addUser(user);
       store.setUser(user);
+      sendLeadToN8N({ type: 'lead_signup', email, name, role, category: category || null });
       updateNav();
       toast('¡Cuenta creada exitosamente!');
       showPage('onboarding'); renderOnboarding();
@@ -692,6 +705,7 @@ $('#requestServiceForm')?.addEventListener('submit', (e) => {
   if (!message) { toast('Escribe un mensaje para el profesional', 'error'); return; }
   const request = { id: 'req_' + Date.now(), serviceId, serviceName: service?.title || 'Servicio', professionalId: proId, professionalName: service?.professionalName || 'Profesional', clientId: user.id, clientName: user.name, price: service?.price || 0, message, status: 'pending', createdAt: Date.now() };
   store.addRequest(request);
+  sendLeadToN8N({ type: 'lead_service_request', name: user.name, email: user.email || '', professionalName: request.professionalName, serviceName: request.serviceName, price: request.price, message });
   $('#requestModal').classList.add('hidden');
   toast('¡Solicitud enviada al profesional!');
   e.target.reset();
