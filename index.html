@@ -3,21 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary Meta Tags / SEO -->
   <title>WebEmpire — Crea tu sitio web profesional</title>
+  <meta name="title" content="WebEmpire — Crea tu sitio web profesional">
   <meta name="description" content="WebEmpire es la plataforma todo-en-uno para crear, lanzar y gestionar tu presencia digital. Plantillas profesionales, servicios de expertos verificados y pagos protegidos.">
+  <meta name="keywords" content="crear sitio web, diseño web, plantillas web, marketplace profesionales, desarrollo web, presencia digital, WebEmpire">
+  <meta name="author" content="WebEmpire">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="es">
   <meta name="theme-color" content="#6366f1">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 8L92 50L50 92L8 50Z' fill='%236366f1'/%3E%3C/svg%3E">
-  <meta property="og:title" content="WebEmpire — Crea tu sitio web profesional">
-  <meta property="og:description" content="La plataforma todo-en-uno para crear, lanzar y gestionar tu presencia digital. Plantillas profesionales, profesionales verificados y pagos protegidos.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://digitalempire.app/">
-  <meta property="og:image" content="https://digitalempire.app/og-image.jpg">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="WebEmpire — Crea tu sitio web profesional">
-  <meta name="twitter:description" content="La plataforma todo-en-uno para crear, lanzar y gestionar tu presencia digital. Plantillas profesionales, profesionales verificados y pagos protegidos.">
-  <link rel="stylesheet" href="style.css">
+  <link rel="canonical" href="https://digitalempire.app/">
+
+  <!-- Performance: DNS prefetch y preconnect para fuentes externas -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://digitalempire.app" crossorigin>
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" sizes="48x48" type="image/x-icon">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 8L92 50L50 92L8 50Z' fill='%236366f1'/%3E%3C/svg%3E" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 8L92 50L50 92L8 50Z' fill='%236366f1'/%3E%3C/svg%3E">
+
+  <!-- Web App Manifest (PWA) -->
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://digitalempire.app/">
+  <meta property="og:title" content="WebEmpire — Crea tu sitio web profesional">
+  <meta property="og:description" content="La plataforma todo-en-uno para crear, lanzar y gestionar tu presencia digital. Plantillas profesionales, profesionales verificados y pagos protegidos.">
+  <meta property="og:image" content="https://digitalempire.app/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="WebEmpire — Crea tu sitio web profesional">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:locale:alternate" content="es_419">
+  <meta property="og:site_name" content="WebEmpire">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://digitalempire.app/">
+  <meta name="twitter:title" content="WebEmpire — Crea tu sitio web profesional">
+  <meta name="twitter:description" content="La plataforma todo-en-uno para crear, lanzar y gestionar tu presencia digital. Plantillas profesionales, profesionales verificados y pagos protegidos.">
+  <meta name="twitter:image" content="https://digitalempire.app/og-image.jpg">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Fonts (font-display: swap) -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -34,26 +70,26 @@
         <a href="#" data-navigate="templates">Plantillas</a>
         <a href="#" data-navigate="pricing">Precios</a>
         <a href="#" data-navigate="marketplace">Servicios</a>
-        <a href="#" id="navFavorites" class="hidden" data-navigate="favorites">Favoritos</a>
+        <a href="#" id="navFavorites" class="hidden" data-navigate="favorites">Favoritos <span class="nav-fav-badge" id="navFavoritesCount">0</span></a>
         <a href="#" id="navDashboard" class="hidden" data-navigate="dashboard">Dashboard</a>
       </div>
       <div class="nav-actions">
-        <button class="theme-toggle" id="themeToggle" title="Cambiar tema">◐</button>
+        <button class="theme-toggle" id="themeToggle" title="Cambiar tema" aria-label="Cambiar tema oscuro/claro">◐</button>
         <div id="authButtons">
           <button class="btn btn-ghost" data-navigate="login">Iniciar sesión</button>
           <button class="btn btn-primary" data-navigate="register">Registrarse</button>
         </div>
         <div id="userMenu" class="hidden">
-          <button class="user-avatar" id="userAvatarBtn">
+          <button class="user-avatar" id="userAvatarBtn" aria-label="Menú de usuario" aria-expanded="false" aria-haspopup="true">
             <span id="userAvatarLetter">U</span>
             <span id="userMenuName" class="user-menu-name">Usuario</span>
           </button>
-          <div class="dropdown-menu" id="userDropdown">
-            <a href="#" data-navigate="dashboard">Dashboard</a>
-            <a href="#" id="logoutBtn">Cerrar sesión</a>
+          <div class="dropdown-menu" id="userDropdown" role="menu" aria-label="Menú de usuario">
+            <a href="#" data-navigate="dashboard" role="menuitem">Dashboard</a>
+            <a href="#" id="logoutBtn" role="menuitem">Cerrar sesión</a>
           </div>
         </div>
-        <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="navLinks">☰</button>
       </div>
     </div>
   </nav>
@@ -236,16 +272,16 @@
     <div class="marketplace-header">
       <div class="container">
         <div class="search-bar">
-          <input type="text" id="searchInput" placeholder="Buscar servicios...">
+          <input type="text" id="searchInput" placeholder="Buscar servicios..." aria-label="Buscar servicios" role="searchbox">
           <button id="searchBtn" class="btn btn-primary">Buscar</button>
         </div>
       </div>
     </div>
     <div class="marketplace-layout container">
-      <aside class="filters-sidebar" id="filtersSidebar">
+      <aside class="filters-sidebar" id="filtersSidebar" role="complementary" aria-label="Filtros de búsqueda">
         <div class="filters-header">
-          <h3>Filtros</h3>
-          <button id="closeFilters" class="btn-close">&times;</button>
+          <h3 id="filtersHeading">Filtros</h3>
+          <button id="closeFilters" class="btn-close" aria-label="Cerrar filtros">&times;</button>
         </div>
         <div class="filter-group" id="categoryFilters">
           <h4>Categoría</h4>
@@ -260,7 +296,7 @@
         </div>
         <div class="filter-group">
           <h4>Ordenar por</h4>
-          <select id="sortFilter">
+          <select id="sortFilter" aria-label="Ordenar resultados">
             <option value="relevance">Relevancia</option>
             <option value="price-low">Precio: menor a mayor</option>
             <option value="price-high">Precio: mayor a menor</option>
@@ -271,13 +307,21 @@
         <button id="clearFilters" class="btn btn-ghost btn-full">Limpiar filtros</button>
       </aside>
       <main class="marketplace-main">
-        <button id="openFilters" class="btn btn-ghost btn-filters-mobile">Filtros</button>
+        <button id="openFilters" class="btn btn-ghost btn-filters-mobile" aria-label="Abrir panel de filtros" aria-expanded="false" aria-controls="filtersSidebar">Filtros</button>
         <div class="results-header">
           <span id="resultsCount">0 servicios encontrados</span>
         </div>
         <div class="marketplace-grid" id="marketplaceServices"></div>
-        <div id="emptyMarketplace" class="empty-state hidden">
-          <p>No se encontraron servicios</p>
+        <div id="emptyMarketplace" class="empty-state hidden" role="status" aria-live="polite">
+          <div class="empty-icon-wrap">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <h3>No se encontraron servicios</h3>
+          <p>Intenta ajustar los filtros de búsqueda o explora todas las categorías disponibles.</p>
+          <div class="empty-actions">
+            <button class="btn btn-primary" id="exploreAllServices" data-navigate="marketplace">Explorar todos los servicios</button>
+            <button class="btn btn-ghost" id="clearAllFiltersBtn">Limpiar filtros</button>
+          </div>
         </div>
       </main>
     </div>
@@ -307,11 +351,11 @@
           <div class="avatar" id="clientAvatar">C</div>
           <h3 id="clientName">Cliente</h3>
         </div>
-        <nav class="sidebar-nav">
-          <a href="#" class="sidebar-tab active" data-tab="client-overview">Resumen</a>
-          <a href="#" class="sidebar-tab" data-tab="client-requests">Mis solicitudes</a>
-          <a href="#" class="sidebar-tab" data-tab="client-favorites">Favoritos</a>
-          <a href="#" class="sidebar-tab" data-tab="client-settings">Configuración</a>
+        <nav class="sidebar-nav" role="navigation" aria-label="Navegación del dashboard de cliente">
+          <a href="#" class="sidebar-tab active" data-tab="client-overview" role="tab" aria-selected="true">Resumen</a>
+          <a href="#" class="sidebar-tab" data-tab="client-requests" role="tab" aria-selected="false">Mis solicitudes</a>
+          <a href="#" class="sidebar-tab" data-tab="client-favorites" role="tab" aria-selected="false">Favoritos</a>
+          <a href="#" class="sidebar-tab" data-tab="client-settings" role="tab" aria-selected="false">Configuración</a>
         </nav>
       </aside>
       <main class="dashboard-main">
@@ -319,31 +363,79 @@
           <div class="tab-content active" id="tab-client-overview">
             <h2>Resumen</h2>
             <div class="stats-grid">
-              <div class="stat-card">
-                <span class="stat-value" id="clientTotalRequests">0</span>
-                <span class="stat-label">Total solicitudes</span>
+              <div class="stat-card stat-card-icon" role="group" aria-label="Total de solicitudes">
+                <div class="stat-icon stat-icon-primary">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                </div>
+                <div class="stat-content">
+                  <span class="stat-value" id="clientTotalRequests">0</span>
+                  <span class="stat-label">Total solicitudes</span>
+                </div>
               </div>
-              <div class="stat-card">
-                <span class="stat-value" id="clientActiveRequests">0</span>
-                <span class="stat-label">Solicitudes activas</span>
+              <div class="stat-card stat-card-icon" role="group" aria-label="Solicitudes activas">
+                <div class="stat-icon stat-icon-accent">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>
+                <div class="stat-content">
+                  <span class="stat-value" id="clientActiveRequests">0</span>
+                  <span class="stat-label">Solicitudes activas</span>
+                </div>
               </div>
-              <div class="stat-card">
-                <span class="stat-value" id="clientFavoritesCount">0</span>
-                <span class="stat-label">Favoritos</span>
+              <div class="stat-card stat-card-icon" role="group" aria-label="Favoritos guardados">
+                <div class="stat-icon stat-icon-danger">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </div>
+                <div class="stat-content">
+                  <span class="stat-value" id="clientFavoritesCount">0</span>
+                  <span class="stat-label">Favoritos</span>
+                </div>
               </div>
             </div>
             <div class="activity-section">
               <h3>Actividad reciente</h3>
               <div id="clientRecentActivity"></div>
+              <div id="emptyClientActivity" class="empty-state hidden" role="status" aria-live="polite">
+                <div class="empty-icon-wrap">
+                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                </div>
+                <h3>Sin actividad reciente</h3>
+                <p>Comienza a explorar servicios y tus solicitudes aparecerán aquí.</p>
+                <div class="empty-actions">
+                  <button class="btn btn-primary" data-navigate="marketplace">Explorar servicios</button>
+                  <button class="btn btn-ghost" data-navigate="templates">Ver plantillas</button>
+                </div>
+              </div>
             </div>
           </div>
           <div class="tab-content" id="tab-client-requests">
             <h2>Mis solicitudes</h2>
             <div id="clientRequestsList"></div>
+            <div id="emptyClientRequests" class="empty-state hidden" role="status" aria-live="polite">
+              <div class="empty-icon-wrap">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </div>
+              <h3>No tienes solicitudes</h3>
+              <p>Explora los servicios disponibles y solicita los que necesites para tu proyecto.</p>
+              <div class="empty-actions">
+                <button class="btn btn-primary" data-navigate="marketplace">Explorar servicios</button>
+                <button class="btn btn-ghost" data-navigate="templates">Ver plantillas</button>
+              </div>
+            </div>
           </div>
           <div class="tab-content" id="tab-client-favorites">
             <h2>Favoritos</h2>
             <div id="clientFavoritesGrid"></div>
+            <div id="emptyClientFavorites" class="empty-state hidden" role="status" aria-live="polite">
+              <div class="empty-icon-wrap">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              </div>
+              <h3>No tienes favoritos</h3>
+              <p>Guarda tus servicios preferidos con el icono de corazón para acceder rápidamente a ellos.</p>
+              <div class="empty-actions">
+                <button class="btn btn-primary" data-navigate="marketplace">Explorar servicios</button>
+                <button class="btn btn-ghost" data-navigate="templates">Ver plantillas</button>
+              </div>
+            </div>
           </div>
           <div class="tab-content" id="tab-client-settings">
             <h2>Configuración</h2>
@@ -362,13 +454,13 @@
           <div class="avatar" id="proAvatar">P</div>
           <h3 id="proName">Profesional</h3>
         </div>
-        <nav class="sidebar-nav">
-          <a href="#" class="sidebar-tab active" data-tab="pro-overview">Resumen</a>
-          <a href="#" class="sidebar-tab" data-tab="pro-services">Mis servicios</a>
-          <a href="#" class="sidebar-tab" data-tab="pro-publish">Publicar servicio</a>
-          <a href="#" class="sidebar-tab" data-tab="pro-requests">Solicitudes</a>
-          <a href="#" class="sidebar-tab" data-tab="pro-earnings">Ganancias</a>
-          <a href="#" class="sidebar-tab" data-tab="pro-settings">Configuración</a>
+        <nav class="sidebar-nav" role="navigation" aria-label="Navegación del dashboard de profesional">
+          <a href="#" class="sidebar-tab active" data-tab="pro-overview" role="tab" aria-selected="true">Resumen</a>
+          <a href="#" class="sidebar-tab" data-tab="pro-services" role="tab" aria-selected="false">Mis servicios</a>
+          <a href="#" class="sidebar-tab" data-tab="pro-publish" role="tab" aria-selected="false">Publicar servicio</a>
+          <a href="#" class="sidebar-tab" data-tab="pro-requests" role="tab" aria-selected="false">Solicitudes</a>
+          <a href="#" class="sidebar-tab" data-tab="pro-earnings" role="tab" aria-selected="false">Ganancias</a>
+          <a href="#" class="sidebar-tab" data-tab="pro-settings" role="tab" aria-selected="false">Configuración</a>
         </nav>
       </aside>
       <main class="dashboard-main">
@@ -376,35 +468,121 @@
           <div class="tab-content active" id="tab-pro-overview">
             <h2>Resumen</h2>
             <div class="stats-grid">
-              <div class="stat-card">
-                <span class="stat-value" id="proTotalServices">0</span>
-                <span class="stat-label">Servicios publicados</span>
+              <div class="stat-card stat-card-icon" role="group" aria-label="Servicios publicados">
+                <div class="stat-icon stat-icon-primary">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                </div>
+                <div class="stat-content">
+                  <span class="stat-value" id="proTotalServices">0</span>
+                  <span class="stat-label">Servicios publicados</span>
+                </div>
               </div>
-              <div class="stat-card">
-                <span class="stat-value" id="proTotalRequests">0</span>
-                <span class="stat-label">Solicitudes recibidas</span>
+              <div class="stat-card stat-card-icon" role="group" aria-label="Solicitudes recibidas">
+                <div class="stat-icon stat-icon-accent">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <div class="stat-content">
+                  <span class="stat-value" id="proTotalRequests">0</span>
+                  <span class="stat-label">Solicitudes recibidas</span>
+                </div>
               </div>
-              <div class="stat-card">
-                <span class="stat-value" id="proTotalEarnings">0</span>
-                <span class="stat-label">Ganancias totales</span>
+              <div class="stat-card stat-card-icon" role="group" aria-label="Ganancias totales">
+                <div class="stat-icon stat-icon-success">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <div class="stat-content">
+                  <span class="stat-value" id="proTotalEarnings">0</span>
+                  <span class="stat-label">Ganancias totales</span>
+                </div>
               </div>
-              <div class="stat-card">
-                <span class="stat-value" id="proAvgRating">0</span>
-                <span class="stat-label">Valoración media</span>
+              <div class="stat-card stat-card-icon" role="group" aria-label="Valoración media">
+                <div class="stat-icon stat-icon-warning">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <div class="stat-content">
+                  <span class="stat-value" id="proAvgRating">0</span>
+                  <span class="stat-label">Valoración media</span>
+                </div>
               </div>
             </div>
             <div class="activity-section">
               <h3>Actividad reciente</h3>
               <div id="proRecentActivity"></div>
+              <div id="emptyProActivity" class="empty-state hidden" role="status" aria-live="polite">
+                <div class="empty-icon-wrap">
+                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                </div>
+                <h3>Sin actividad reciente</h3>
+                <p>Publica tus primeros servicios y comienza a recibir solicitudes de clientes.</p>
+                <div class="empty-actions">
+                  <button class="btn btn-primary" data-tab="pro-publish">Publicar servicio</button>
+                  <button class="btn btn-ghost" data-tab="pro-services">Ver mis servicios</button>
+                </div>
+              </div>
             </div>
           </div>
           <div class="tab-content" id="tab-pro-services">
             <h2>Mis servicios</h2>
             <div id="proServicesList"></div>
+            <div id="emptyProServices" class="empty-state hidden" role="status" aria-live="polite">
+              <div class="empty-icon-wrap">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              </div>
+              <h3>No tienes servicios publicados</h3>
+              <p>Crea tu primer servicio para empezar a recibir solicitudes de clientes potenciales.</p>
+              <div class="empty-actions">
+                <button class="btn btn-primary" data-tab="pro-publish">Publicar primer servicio</button>
+              </div>
+            </div>
           </div>
           <div class="tab-content" id="tab-pro-publish">
             <h2>Publicar servicio</h2>
-            <form id="publishServiceForm"></form>
+            <form id="publishServiceForm" class="publish-form" novalidate>
+              <div class="form-group">
+                <label for="serviceTitle">Título del servicio *</label>
+                <input type="text" id="serviceTitle" placeholder="Ej: Desarrollo web Full-Stack" maxlength="100" required>
+                <span class="field-counter" id="titleCounter">0/100</span>
+                <span class="field-error" id="serviceTitleError"></span>
+              </div>
+              <div class="form-group">
+                <label for="serviceCategory">Categoría *</label>
+                <select id="serviceCategory" required>
+                  <option value="">Selecciona una categoría</option>
+                </select>
+                <span class="field-error" id="serviceCategoryError"></span>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="serviceShortDesc">Descripción corta *</label>
+                  <input type="text" id="serviceShortDesc" placeholder="Una línea resumen" maxlength="120" required>
+                  <span class="field-counter" id="shortDescCounter">0/120</span>
+                  <span class="field-error" id="serviceShortDescError"></span>
+                </div>
+                <div class="form-group">
+                  <label for="serviceTags">Etiquetas (separadas por coma)</label>
+                  <input type="text" id="serviceTags" placeholder="react, nodejs, web">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="serviceDescription">Descripción completa *</label>
+                <textarea id="serviceDescription" rows="5" placeholder="Describe tu servicio en detalle..." maxlength="1000" required></textarea>
+                <span class="field-counter" id="descCounter">0/1000</span>
+                <span class="field-error" id="serviceDescriptionError"></span>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="servicePrice">Precio (USD) *</label>
+                  <input type="number" id="servicePrice" min="1" max="100000" step="1" placeholder="0" required>
+                  <span class="field-error" id="servicePriceError"></span>
+                </div>
+                <div class="form-group">
+                  <label for="serviceDelivery">Días de entrega *</label>
+                  <input type="number" id="serviceDelivery" min="1" max="365" step="1" placeholder="7" required>
+                  <span class="field-error" id="serviceDeliveryError"></span>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg">Publicar servicio</button>
+            </form>
           </div>
           <div class="tab-content" id="tab-pro-requests">
             <h2>Solicitudes</h2>
@@ -428,9 +606,16 @@
     <div class="container page-inner">
       <h1>Mis Favoritos</h1>
       <div id="favoritesGrid" class="services-grid"></div>
-      <div id="emptyFavorites" class="empty-state hidden">
-        <p>No tienes servicios guardados en favoritos.</p>
-        <button class="btn btn-primary" data-navigate="marketplace">Explorar servicios</button>
+      <div id="emptyFavorites" class="empty-state hidden" role="status" aria-live="polite">
+        <div class="empty-icon-wrap">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <h3>No tienes favoritos</h3>
+        <p>Guarda tus servicios preferidos para acceder rápidamente a ellos más tarde.</p>
+        <div class="empty-actions">
+          <button class="btn btn-primary" data-navigate="marketplace">Explorar servicios</button>
+          <button class="btn btn-ghost" data-navigate="templates">Ver plantillas</button>
+        </div>
       </div>
     </div>
   </section>
@@ -485,8 +670,123 @@
     <div id="dashboardContent"></div>
   </section>
 
+  <!-- REQUEST MODAL -->
+  <div id="requestModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-label="Solicitar servicio">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Solicitar servicio</h2>
+        <button class="modal-close" id="closeRequestModal" aria-label="Cerrar">&times;</button>
+      </div>
+      <form id="requestServiceForm" class="modal-body">
+        <input type="hidden" id="requestServiceId">
+        <input type="hidden" id="requestProfessionalId">
+        <div class="form-group">
+          <label>Servicio</label>
+          <input type="text" id="requestServiceName" readonly class="input-readonly">
+        </div>
+        <div class="form-group">
+          <label>Profesional</label>
+          <input type="text" id="requestProfessional" readonly class="input-readonly">
+        </div>
+        <div class="form-group">
+          <label>Precio</label>
+          <input type="text" id="requestPrice" readonly class="input-readonly">
+        </div>
+        <div class="form-group">
+          <label for="requestMessage">Mensaje para el profesional *</label>
+          <textarea id="requestMessage" rows="4" placeholder="Describe tu proyecto y lo que necesitas..." maxlength="500" required></textarea>
+          <span class="field-error" id="requestMessageError"></span>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg">Enviar solicitud</button>
+      </form>
+    </div>
+  </div>
+
   <!-- TOAST CONTAINER -->
   <div class="toast-container" id="toastContainer"></div>
+
+  <!-- PRIVACY BANNER -->
+  <div id="privacyBanner" class="privacy-banner hidden" role="dialog" aria-label="Política de cookies" aria-describedby="privacyBannerDesc">
+    <div class="privacy-banner-content">
+      <div class="privacy-banner-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="privacy-banner-text">
+        <h4>Privacidad y cookies</h4>
+        <p id="privacyBannerDesc">Utilizamos cookies esenciales y de análisis para mejorar tu experiencia. Puedes configurar tus preferencias o aceptar todas las cookies.</p>
+      </div>
+      <div class="privacy-banner-actions">
+        <button class="btn btn-ghost" id="privacyReject" aria-label="Rechazar cookies opcionales">Rechazar</button>
+        <button class="btn btn-outline" id="privacySettings" aria-label="Configurar preferencias de cookies">Configurar</button>
+        <button class="btn btn-primary" id="acceptCookies" aria-label="Aceptar todas las cookies">Aceptar todo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRIVACY SETTINGS MODAL -->
+  <div id="privacyModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-label="Configuración de cookies" aria-describedby="privacyModalDesc">
+    <div class="modal" style="max-width:520px">
+      <div class="modal-header">
+        <h2>Configuración de cookies</h2>
+        <button class="modal-close" id="closePrivacyModal" aria-label="Cerrar configuración de cookies">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="privacyModalDesc" style="color:var(--text-secondary);font-size:14px;margin-bottom:8px">Gestiona qué tipo de cookies deseas aceptar. Las cookies esenciales son necesarias para el funcionamiento del sitio.</p>
+        <div class="cookie-category">
+          <div class="cookie-category-header">
+            <div>
+              <h4>Cookies esenciales</h4>
+              <p>Necesarias para el funcionamiento básico del sitio. No se pueden desactivar.</p>
+            </div>
+            <label class="toggle" style="pointer-events:none;opacity:0.6">
+              <input type="checkbox" checked disabled aria-label="Cookies esenciales (siempre activas)">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="cookie-category">
+          <div class="cookie-category-header">
+            <div>
+              <h4>Cookies de análisis</h4>
+              <p>Nos ayudan a entender cómo utilizas el sitio para mejorar la experiencia.</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="cookieAnalytics" aria-label="Cookies de análisis">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="cookie-category">
+          <div class="cookie-category-header">
+            <div>
+              <h4>Cookies de marketing</h4>
+              <p>Permiten mostrar publicidad relevante y medir campañas.</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="cookieMarketing" aria-label="Cookies de marketing">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="cookie-category">
+          <div class="cookie-category-header">
+            <div>
+              <h4>Cookies de preferencias</h4>
+              <p>Recuerdan tus configuraciones como idioma y tema seleccionado.</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="cookiePreferences" aria-label="Cookies de preferencias">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="privacy-modal-actions">
+          <button class="btn btn-ghost" id="privacyModalCancel">Cancelar</button>
+          <button class="btn btn-primary" id="privacyModalSave">Guardar preferencias</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

@@ -45,6 +45,17 @@ function formatCurrency(amount) {
   return new Intl.NumberFormat(CURRENCY_LOCALE, { style: 'currency', currency: CURRENCY, maximumFractionDigits: numeric % 1 === 0 ? 0 : 2 }).format(numeric);
 }
 
+/* ---------- UTILITIES ---------- */
+function debounce(fn, delay = 300) {
+  let timer = null;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+const FAVORITES_CHANGED = 'webempire:favorites-changed';
+
 /* ---------- STORE ---------- */
 function createStore() {
   const KEY = 'webempire_db';
@@ -78,8 +89,8 @@ function createStore() {
       if (!user) return false;
       if (!user.favorites) user.favorites = [];
       const idx = user.favorites.indexOf(serviceId);
-      if (idx > -1) { user.favorites.splice(idx, 1); this.setUser(user); return false; }
-      user.favorites.push(serviceId); this.setUser(user); return true;
+      if (idx > -1) { user.favorites.splice(idx, 1); this.setUser(user); window.dispatchEvent(new CustomEvent(FAVORITES_CHANGED)); return false; }
+      user.favorites.push(serviceId); this.setUser(user); window.dispatchEvent(new CustomEvent(FAVORITES_CHANGED)); return true;
     },
 
     getTheme() { return load(KEY)?.theme || 'dark'; },
@@ -269,6 +280,7 @@ function updateNav() {
   if (userMenu) userMenu.classList.toggle('hidden', !isAuth);
   if (favEl) favEl.classList.toggle('hidden', !isAuth);
   if (dashEl) dashEl.classList.toggle('hidden', !isAuth);
+  updateFavoritesCounter();
   if (user) {
     const letter = document.getElementById('userAvatarLetter');
     const name = document.getElementById('userMenuName');
@@ -276,6 +288,24 @@ function updateNav() {
     if (name) name.textContent = user.name.split(' ')[0];
   }
 }
+
+function updateFavoritesCounter() {
+  const badge = document.getElementById('navFavoritesCount');
+  if (!badge) return;
+  const user = store.getUser();
+  const count = user ? store.getFavorites().length : 0;
+  const navLink = document.getElementById('navFavorites');
+  if (navLink) navLink.classList.toggle('hidden', !user);
+  badge.textContent = count;
+  badge.classList.remove('bump');
+  void badge.offsetWidth;
+  if (count > 0) badge.classList.add('bump');
+}
+window.addEventListener(FAVORITES_CHANGED, () => {
+  updateFavoritesCounter();
+  if ($('#page-favorites').classList.contains('active')) renderFavorites();
+  if ($('#page-client-dashboard').classList.contains('active') && $('#tab-client-favorites').classList.contains('active')) renderClientFavorites();
+});
 
 function getCategoryName(id) { const c = CATEGORIES.find(c => c.id === id); return c ? c.name : id; }
 function getCategoryIcon(id) { const c = CATEGORIES.find(c => c.id === id); return c ? c.icon : '📦'; }
@@ -386,6 +416,18 @@ document.addEventListener('click', (e) => {
     showPage('home'); renderHome();
     toast('Sesión cerrada', 'info');
   }
+  const sideTab = e.target.closest('.sidebar-tab');
+  if (sideTab && sideTab.dataset.tab) {
+    e.preventDefault();
+    const layout = sideTab.closest('.dashboard-layout');
+    if (layout) {
+      layout.querySelectorAll('.sidebar-tab').forEach(t => t.classList.toggle('active', t === sideTab));
+      const content = layout.querySelector('.dashboard-tabs');
+      if (content) {
+        content.querySelectorAll('.tab-content').forEach(t => t.classList.toggle('active', t.id === 'tab-' + sideTab.dataset.tab));
+      }
+    }
+  }
 });
 
 /* ========== AUTH ========== */
@@ -479,6 +521,17 @@ function renderMarketplace(preselectCategory) {
   applyFilters();
 }
 
+function renderSkeletonCards(count = 6) {
+  return Array.from({ length: count }, () => `
+    <div class="skeleton-card" aria-hidden="true">
+      <div class="skeleton sk-img"></div>
+      <div class="skeleton sk-line short"></div>
+      <div class="skeleton sk-line mid"></div>
+      <div class="skeleton sk-line"></div>
+      <div class="skeleton sk-footer"></div>
+    </div>`).join('');
+}
+
 function applyFilters() {
   const services = store.getServices();
   let filtered = [...services];
@@ -500,25 +553,52 @@ function applyFilters() {
   const empty = $('#emptyMarketplace');
   const count = $('#resultsCount');
   count.textContent = filtered.length + ' servicio' + (filtered.length !== 1 ? 's' : '') + ' encontrado' + (filtered.length !== 1 ? 's' : '');
-  if (filtered.length === 0) { grid.innerHTML = ''; empty.classList.remove('hidden'); }
-  else { empty.classList.add('hidden'); grid.innerHTML = filtered.map(s => renderServiceCard(s)).join(''); bindServiceCards(); }
+  if (filtered.length === 0) { grid.innerHTML = ''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+  grid.innerHTML = renderSkeletonCards(Math.min(filtered.length, 6));
+  setTimeout(() => {
+    if (grid.querySelector('.skeleton-card')) grid.innerHTML = filtered.map(s => renderServiceCard(s)).join('');
+    bindServiceCards();
+  }, 350);
 }
 
-$('#searchInput').addEventListener('input', (e) => { currentFilters.search = e.target.value; applyFilters(); });
-$('#searchBtn').addEventListener('click', () => { currentFilters.search = $('#searchInput').value; applyFilters(); });
+const debouncedSearch = debounce(() => {
+  currentFilters.search = $('#searchInput').value.trim();
+  applyFilters();
+}, 300);
+
+$('#searchInput').addEventListener('input', debouncedSearch);
+$('#searchBtn').addEventListener('click', () => { currentFilters.search = $('#searchInput').value.trim(); applyFilters(); });
 $('#categoryFilters').addEventListener('change', (e) => { if (e.target.name === 'category') { currentFilters.category = e.target.value; applyFilters(); } });
 $('#priceFilter').addEventListener('input', (e) => { currentFilters.maxPrice = parseInt(e.target.value); $('#priceFilterValue').textContent = formatCurrency(parseInt(e.target.value)); applyFilters(); });
 $('#ratingFilters').addEventListener('change', (e) => { if (e.target.name === 'rating') { currentFilters.minRating = parseInt(e.target.value); applyFilters(); } });
 $('#sortFilter').addEventListener('change', (e) => { currentFilters.sort = e.target.value; applyFilters(); });
-$('#clearFilters').addEventListener('click', () => {
+function resetFilters() {
   currentFilters = { category: '', search: '', maxPrice: 1000, minRating: 0, sort: 'featured' };
-  $('#searchInput').value = ''; $('#priceFilter').value = 1000; $('#priceFilterValue').textContent = formatCurrency(1000);
-  $('#sortFilter').value = 'featured';
+  const si = $('#searchInput'); if (si) si.value = '';
+  const pr = $('#priceFilter'); if (pr) pr.value = 1000;
+  const pv = $('#priceFilterValue'); if (pv) pv.textContent = formatCurrency(1000);
+  const sf = $('#sortFilter'); if (sf) sf.value = 'featured';
   $$('#categoryFilters input, #ratingFilters input').forEach(i => i.checked = false);
   applyFilters();
-});
+}
+$('#clearFilters').addEventListener('click', resetFilters);
+$('#clearAllFiltersBtn')?.addEventListener('click', resetFilters);
 $('#openFilters')?.addEventListener('click', () => { $('#filtersSidebar').classList.add('open'); });
 $('#closeFilters')?.addEventListener('click', () => { $('#filtersSidebar').classList.remove('open'); });
+
+/* ========== RATING FILTERS RENDER ========== */
+(function renderRatingFilters() {
+  const container = $('#ratingFilters');
+  if (!container) return;
+  const opts = [
+    { v: 0, label: 'Todas' },
+    { v: 4, label: '4+ ★' },
+    { v: 3, label: '3+ ★' },
+    { v: 2, label: '2+ ★' }
+  ];
+  container.innerHTML = '<h4>Valoración</h4>' + opts.map(o => `<label class="filter-checkbox"><input type="radio" name="rating" value="${o.v}" ${o.v === 0 ? 'checked' : ''}><span>${o.label}</span></label>`).join('');
+})();
 
 /* ========== SERVICE CARD ========== */
 function renderServiceCard(s) {
@@ -585,11 +665,23 @@ function openRequestModal(service) {
   $('#requestServiceId').value = service.id;
   $('#requestProfessionalId').value = service.professionalId;
   $('#requestMessage').value = '';
+  const err = $('#requestMessageError');
+  if (err) err.classList.remove('show');
+  const group = $('#requestMessage')?.closest('.form-group');
+  if (group) group.classList.remove('has-error', 'is-valid');
   $('#requestModal').classList.remove('hidden');
 }
-$('#closeRequestModal').addEventListener('click', () => { $('#requestModal').classList.add('hidden'); });
-$('#requestModal').addEventListener('click', (e) => { if (e.target === $('#requestModal')) $('#requestModal').classList.add('hidden'); });
-$('#requestServiceForm').addEventListener('submit', (e) => {
+$('#closeRequestModal')?.addEventListener('click', () => { $('#requestModal').classList.add('hidden'); });
+$('#requestModal')?.addEventListener('click', (e) => { if (e.target === $('#requestModal')) $('#requestModal').classList.add('hidden'); });
+$('#requestMessage')?.addEventListener('input', (e) => {
+  const val = e.target.value;
+  const err = $('#requestMessageError');
+  const group = e.target.closest('.form-group');
+  const valid = val.trim().length > 0;
+  if (err) err.classList.toggle('show', !valid);
+  if (group) { group.classList.toggle('has-error', !valid); group.classList.toggle('is-valid', valid); }
+});
+$('#requestServiceForm')?.addEventListener('submit', (e) => {
   e.preventDefault();
   const user = store.getUser();
   if (!user) return;
@@ -652,7 +744,7 @@ function renderClientSettings() {
     if (!name) { toast('El nombre es obligatorio', 'error'); return; }
     const users = store.getUsers();
     const idx = users.findIndex(u => u.id === user.id);
-    if (idx !== -1) { users[idx].name = name; if (password.length >= 6) users[idx].password = password; store.set('users', users); store.setUser(users[idx]); updateNav(); toast('Configuración guardada'); }
+    if (idx !== -1) { users[idx].name = name; if (password.length >= 6) users[idx].password = password; store.setUsers(users); store.setUser(users[idx]); updateNav(); toast('Configuración guardada'); }
   });
 }
 
@@ -700,11 +792,12 @@ function renderProRequests(myRequests) {
   }).join('');
 }
 function renderEarnings(completedRequests, gross, net) {
-  $('#earningsGross').textContent = formatCurrency(gross);
-  $('#earningsFee').textContent = formatCurrency(gross * COMMISSION_RATE);
-  $('#earningsNet').textContent = formatCurrency(net);
-  $('#earningsProjects').textContent = completedRequests.length;
+  const g = $('#earningsGross'); if (g) g.textContent = formatCurrency(gross);
+  const f = $('#earningsFee'); if (f) f.textContent = formatCurrency(gross * COMMISSION_RATE);
+  const n = $('#earningsNet'); if (n) n.textContent = formatCurrency(net);
+  const p = $('#earningsProjects'); if (p) p.textContent = completedRequests.length;
   const history = $('#earningsHistory');
+  if (!history) return;
   if (completedRequests.length === 0) { history.innerHTML = '<div class="transaction-empty">No hay transacciones completadas aún</div>'; return; }
   history.innerHTML = [...completedRequests].reverse().map(r => {
     const fee = r.price * COMMISSION_RATE;
@@ -720,30 +813,166 @@ function renderProSettings() {
     const category = $('#proSettingsCategory').value; const password = $('#proSettingsPassword').value;
     if (!name) { toast('El nombre es obligatorio', 'error'); return; }
     const users = store.getUsers(); const idx = users.findIndex(u => u.id === user.id);
-    if (idx !== -1) { users[idx].name = name; users[idx].bio = bio; users[idx].category = category; if (password.length >= 6) users[idx].password = password; store.set('users', users); store.setUser(users[idx]); updateNav(); toast('Configuración guardada'); }
+    if (idx !== -1) { users[idx].name = name; users[idx].bio = bio; users[idx].category = category; if (password.length >= 6) users[idx].password = password; store.setUsers(users); store.setUser(users[idx]); updateNav(); toast('Configuración guardada'); }
   });
 }
 
 /* ========== PUBLISH SERVICE ========== */
-$('#publishServiceForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const user = store.getUser();
-  if (!user) return;
-  const title = $('#serviceTitle').value.trim(); const category = $('#serviceCategory').value;
-  const description = $('#serviceDescription').value.trim(); const shortDesc = $('#serviceShortDesc').value.trim();
-  const price = parseInt($('#servicePrice').value); const delivery = parseInt($('#serviceDelivery').value);
-  const tags = $('#serviceTags').value.split(',').map(t => t.trim()).filter(Boolean);
-  const service = { id: 'svc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5), title, category, description, shortDesc, price, delivery, tags, rating: 0, reviewCount: 0, professionalId: user.id, professionalName: user.name, professionalBio: user.bio || '', createdAt: Date.now() };
-  if (window._editingServiceId) {
-    const services = store.getServices(); const idx = services.findIndex(s => s.id === window._editingServiceId);
-    if (idx !== -1) { Object.assign(services[idx], { title, category, description, shortDesc, price, delivery, tags }); store.setServices(services); toast('Servicio actualizado'); }
-    window._editingServiceId = null;
-    $('#publishServiceForm').querySelector('button[type="submit"]').textContent = 'Publicar servicio';
-  } else { store.addService(service); toast('¡Servicio publicado exitosamente!'); }
-  e.target.reset(); renderProDashboard();
-  const sidebar = e.target.closest('.dashboard-layout');
-  if (sidebar) { sidebar.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active')); sidebar.querySelector('[data-tab="pro-services"]')?.classList.add('active'); sidebar.querySelectorAll('.dashboard-tab').forEach(t => t.classList.remove('active')); $('#tab-pro-services')?.classList.add('active'); }
-});
+function renderPublishForm() {
+  const catSelect = $('#serviceCategory');
+  if (catSelect && catSelect.options.length <= 1) {
+    catSelect.innerHTML = '<option value="">Selecciona una categoría</option>' + CATEGORIES.map(c => `<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
+  }
+}
+
+function getFieldErrorId(field) {
+  const map = {
+    serviceTitle: 'serviceTitleError',
+    serviceCategory: 'serviceCategoryError',
+    serviceShortDesc: 'serviceShortDescError',
+    serviceDescription: 'serviceDescriptionError',
+    servicePrice: 'servicePriceError',
+    serviceDelivery: 'serviceDeliveryError'
+  };
+  return map[field] || field + 'Error';
+}
+
+function setFieldState(id, errorId, isValid, errorMsg) {
+  const input = document.getElementById(id);
+  const err = document.getElementById(errorId);
+  if (!input) return;
+  const group = input.closest('.form-group');
+  if (group) {
+    group.classList.toggle('has-error', !isValid);
+    group.classList.toggle('is-valid', isValid);
+  }
+  if (err) {
+    err.textContent = errorMsg || '';
+    err.classList.toggle('show', !!errorMsg);
+  }
+}
+
+function updateFieldCounter(id, max) {
+  const input = document.getElementById(id);
+  const counterId = id === 'serviceTitle' ? 'titleCounter' : id === 'serviceShortDesc' ? 'shortDescCounter' : 'descCounter';
+  const counter = document.getElementById(counterId);
+  if (!input || !counter) return;
+  counter.textContent = input.value.length + '/' + max;
+  counter.classList.toggle('over-limit', input.value.length > max);
+}
+
+const PUBLISH_VALIDATORS = {
+  serviceTitle(v) {
+    if (!v.trim()) return 'El título es obligatorio';
+    if (v.trim().length < 5) return 'El título debe tener al menos 5 caracteres';
+    return '';
+  },
+  serviceShortDesc(v) {
+    if (!v.trim()) return 'La descripción corta es obligatoria';
+    return '';
+  },
+  serviceDescription(v) {
+    if (!v.trim()) return 'La descripción es obligatoria';
+    if (v.trim().length < 20) return 'Describe tu servicio con al menos 20 caracteres';
+    return '';
+  },
+  serviceCategory(v) {
+    if (!v) return 'Selecciona una categoría';
+    return '';
+  },
+  servicePrice(v) {
+    const n = Number(v);
+    if (v === '' || Number.isNaN(n) || n <= 0) return 'Ingresa un precio válido mayor a 0';
+    return '';
+  },
+  serviceDelivery(v) {
+    const n = Number(v);
+    if (v === '' || Number.isNaN(n) || n < 1) return 'Ingresa días de entrega válidos (mínimo 1)';
+    return '';
+  }
+};
+
+function validatePublishField(field, show = true) {
+  const input = document.getElementById(field);
+  if (!input) return true;
+  const errorId = getFieldErrorId(field);
+  const validator = PUBLISH_VALIDATORS[field];
+  if (!validator) return true;
+  const error = validator(input.value);
+  setFieldState(field, errorId, !error, show ? error : '');
+  return !error;
+}
+
+const PUBLISH_FIELDS = ['serviceTitle', 'serviceShortDesc', 'serviceDescription', 'serviceCategory', 'servicePrice', 'serviceDelivery'];
+
+function validatePublishForm() {
+  let valid = true;
+  PUBLISH_FIELDS.forEach(f => {
+    if (!validatePublishField(f)) valid = false;
+  });
+  return valid;
+}
+
+function initPublishFormBinding() {
+  renderPublishForm();
+  const form = $('#publishServiceForm');
+  if (!form || form.dataset.bound) return;
+  form.dataset.bound = '1';
+
+  form.querySelectorAll('input, select, textarea').forEach((el) => {
+    el.addEventListener('input', () => {
+      validatePublishField(el.id);
+      if (el.id === 'serviceTitle') updateFieldCounter('serviceTitle', 100);
+      if (el.id === 'serviceShortDesc') updateFieldCounter('serviceShortDesc', 120);
+      if (el.id === 'serviceDescription') updateFieldCounter('serviceDescription', 1000);
+    });
+    el.addEventListener('blur', () => validatePublishField(el.id));
+    el.addEventListener('change', () => validatePublishField(el.id));
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!validatePublishForm()) { toast('Revisa los campos marcados en rojo', 'error'); return; }
+    const user = store.getUser();
+    if (!user) return;
+    const title = $('#serviceTitle').value.trim();
+    const category = $('#serviceCategory').value;
+    const shortDesc = $('#serviceShortDesc').value.trim();
+    const description = $('#serviceDescription').value.trim();
+    const price = parseInt($('#servicePrice').value);
+    const delivery = parseInt($('#serviceDelivery').value);
+    const tags = $('#serviceTags').value.split(',').map(t => t.trim()).filter(Boolean);
+    const service = { id: 'svc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5), title, category, description, shortDesc, price, delivery, tags, rating: 0, reviewCount: 0, professionalId: user.id, professionalName: user.name, professionalBio: user.bio || '', createdAt: Date.now() };
+    if (window._editingServiceId) {
+      const services = store.getServices(); const idx = services.findIndex(s => s.id === window._editingServiceId);
+      if (idx !== -1) { Object.assign(services[idx], { title, category, description, shortDesc, price, delivery, tags }); store.setServices(services); toast('Servicio actualizado'); }
+      window._editingServiceId = null;
+      form.querySelector('button[type="submit"]').textContent = 'Publicar servicio';
+    } else { store.addService(service); toast('¡Servicio publicado exitosamente!'); }
+    form.reset();
+    clearPublishValidation();
+    updateFieldCounter('serviceTitle', 100);
+    updateFieldCounter('serviceShortDesc', 120);
+    updateFieldCounter('serviceDescription', 1000);
+    renderProDashboard();
+    const sidebar = form.closest('.dashboard-layout');
+    if (sidebar) { sidebar.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active')); sidebar.querySelector('[data-tab="pro-services"]')?.classList.add('active'); sidebar.querySelectorAll('.dashboard-tab').forEach(t => t.classList.remove('active')); $('#tab-pro-services')?.classList.add('active'); }
+  });
+}
+
+function clearPublishValidation() {
+  PUBLISH_FIELDS.forEach(f => {
+    const input = document.getElementById(f);
+    if (input) {
+      const group = input.closest('.form-group');
+      if (group) { group.classList.remove('has-error', 'is-valid'); }
+    }
+    const err = document.getElementById(getFieldErrorId(f));
+    if (err) err.classList.remove('show');
+  });
+}
+
+window.publishValidators = { validatePublishField, validatePublishForm, setFieldState };
 
 /* ========== SERVICE ACTIONS ========== */
 window.respondRequest = function(requestId, status) {
@@ -760,6 +989,7 @@ window.deleteService = function(serviceId) {
 window.editService = function(serviceId) {
   const service = store.getServices().find(s => s.id === serviceId);
   if (!service) return; showPage('professional-dashboard');
+  initPublishFormBinding();
   const sidebar = $('#page-professional-dashboard .dashboard-layout');
   sidebar.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
   sidebar.querySelector('[data-tab="pro-publish"]')?.classList.add('active');
@@ -770,6 +1000,10 @@ window.editService = function(serviceId) {
   $('#servicePrice').value = service.price; $('#serviceDelivery').value = service.delivery;
   $('#serviceTags').value = service.tags.join(', ');
   window._editingServiceId = serviceId;
+  clearPublishValidation();
+  updateFieldCounter('serviceTitle', 100);
+  updateFieldCounter('serviceShortDesc', 120);
+  updateFieldCounter('serviceDescription', 1000);
   $('#publishServiceForm').querySelector('button[type="submit"]').textContent = 'Actualizar servicio';
 };
 
@@ -1632,5 +1866,138 @@ window.renderDashboardSettings = function() {
 seedData();
 initTheme();
 updateNav();
+initPublishFormBinding();
+updateFavoritesCounter();
 showPage('home');
 renderHome();
+
+/* ========== PRIVACY BANNER ========== */
+(function initPrivacyBanner() {
+  const KEY = 'webempire_cookie_consent';
+  const banner = document.getElementById('privacyBanner');
+  if (!banner) return;
+
+  function loadPrefs() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch { return null; }
+  }
+  function savePrefs(prefs) { localStorage.setItem(KEY, JSON.stringify(prefs)); }
+  function hideBanner() { banner.classList.add('hidden'); }
+
+  const prefs = loadPrefs();
+  if (prefs && prefs.accepted) { hideBanner(); return; }
+
+  banner.classList.remove('hidden');
+
+  document.getElementById('acceptCookies')?.addEventListener('click', () => {
+    savePrefs({ accepted: true, essential: true, analytics: true, marketing: true, preferences: true });
+    hideBanner();
+    toast('Cookies aceptadas', 'info');
+  });
+
+  document.getElementById('privacyReject')?.addEventListener('click', () => {
+    savePrefs({ accepted: true, essential: true, analytics: false, marketing: false, preferences: false });
+    hideBanner();
+    toast('Solo cookies esenciales activas', 'info');
+  });
+
+  const settingsBtn = document.getElementById('privacySettings');
+  const modal = document.getElementById('privacyModal');
+  const closeBtn = document.getElementById('closePrivacyModal');
+  const cancelBtn = document.getElementById('privacyModalCancel');
+  const saveBtn = document.getElementById('privacyModalSave');
+
+  if (settingsBtn && modal) {
+    settingsBtn.addEventListener('click', () => {
+      const current = loadPrefs();
+      const ca = document.getElementById('cookieAnalytics');
+      const cm = document.getElementById('cookieMarketing');
+      const cp = document.getElementById('cookiePreferences');
+      if (current) { if (ca) ca.checked = current.analytics; if (cm) cm.checked = current.marketing; if (cp) cp.checked = current.preferences; }
+      modal.classList.remove('hidden');
+      modal.querySelector('.modal-close')?.focus();
+    });
+  }
+
+  function closeModal() { modal?.classList.add('hidden'); settingsBtn?.focus(); }
+
+  closeBtn?.addEventListener('click', closeModal);
+  cancelBtn?.addEventListener('click', closeModal);
+  modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) closeModal();
+  });
+
+  saveBtn?.addEventListener('click', () => {
+    const ca = document.getElementById('cookieAnalytics')?.checked || false;
+    const cm = document.getElementById('cookieMarketing')?.checked || false;
+    const cp = document.getElementById('cookiePreferences')?.checked || false;
+    savePrefs({ accepted: true, essential: true, analytics: ca, marketing: cm, preferences: cp });
+    closeModal();
+    hideBanner();
+    toast('Preferencias de cookies guardadas', 'info');
+  });
+})();
+
+/* ========== ACCESSIBILITY TOGGLES ========== */
+(function initAccessibilityToggles() {
+  const mobileBtn = document.getElementById('mobileMenuBtn');
+  const navLinks = document.getElementById('navLinks');
+  if (mobileBtn && navLinks) {
+    mobileBtn.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      mobileBtn.setAttribute('aria-expanded', String(isOpen));
+      mobileBtn.textContent = isOpen ? '✕' : '☰';
+    });
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        mobileBtn.setAttribute('aria-expanded', 'false');
+        mobileBtn.textContent = '☰';
+      });
+    });
+  }
+
+  const userBtn = document.getElementById('userAvatarBtn');
+  const userDropdown = document.getElementById('userDropdown');
+  if (userBtn && userDropdown) {
+    userBtn.addEventListener('click', () => {
+      const isOpen = userDropdown.classList.toggle('show');
+      userBtn.setAttribute('aria-expanded', String(isOpen));
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#userMenu')) {
+        userDropdown.classList.remove('show');
+        userBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  const openFilters = document.getElementById('openFilters');
+  const closeFilters = document.getElementById('closeFilters');
+  const sidebar = document.getElementById('filtersSidebar');
+  if (openFilters && sidebar) {
+    openFilters.addEventListener('click', () => {
+      sidebar.classList.add('open');
+      openFilters.setAttribute('aria-expanded', 'true');
+      closeFilters?.focus();
+    });
+  }
+  if (closeFilters && sidebar) {
+    closeFilters.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      openFilters?.setAttribute('aria-expanded', 'false');
+      openFilters?.focus();
+    });
+  }
+
+  const themeBtn = document.getElementById('themeToggle');
+  if (themeBtn) {
+    const updateLabel = () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      themeBtn.setAttribute('aria-label', isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro');
+    };
+    updateLabel();
+    themeBtn.addEventListener('click', updateLabel);
+  }
+})();
