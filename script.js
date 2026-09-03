@@ -35,6 +35,16 @@ const CATEGORY_GRADIENTS = {
 
 const COMMISSION_RATE = 0.10;
 
+/* ---------- CURRENCY ---------- */
+const CURRENCY = 'USD';
+const CURRENCY_LOCALE = 'en-US';
+
+function formatCurrency(amount) {
+  const numeric = Number(amount);
+  if (Number.isNaN(numeric)) return String(amount);
+  return new Intl.NumberFormat(CURRENCY_LOCALE, { style: 'currency', currency: CURRENCY, maximumFractionDigits: numeric % 1 === 0 ? 0 : 2 }).format(numeric);
+}
+
 /* ---------- STORE ---------- */
 function createStore() {
   const KEY = 'webempire_db';
@@ -112,7 +122,7 @@ const SITE_TEMPLATES = [
     description: 'Elegante plantilla para restaurantes con menú digital y reservas',
     sections: [
       { type: 'hero', title: 'Bienvenidos a nuestro Restaurante', subtitle: 'Cocina de autor con los mejores ingredientes', bgImage: '' },
-      { type: 'services', title: 'Nuestro Menú', items: [{ name: 'Entradas', desc: 'Selección de entrantes de temporada', price: '$12' }, { name: 'Platos Principales', desc: 'Carnes y pescados a la parrilla', price: '$28' }, { name: 'Postres', desc: 'Repostería artesanal diaria', price: '$10' }] },
+      { type: 'services', title: 'Nuestro Menú', items: [{ name: 'Entradas', desc: 'Selección de entrantes de temporada', price: 12 }, { name: 'Platos Principales', desc: 'Carnes y pescados a la parrilla', price: 28 }, { name: 'Postres', desc: 'Repostería artesanal diaria', price: 10 }] },
       { type: 'testimonials', title: 'Lo que dicen nuestros clientes', items: [{ text: 'Experiencia culinaria increíble', author: 'María G.' }, { text: 'El mejor restaurante de la ciudad', author: 'Carlos R.' }] },
       { type: 'contact', title: 'Reserva tu mesa', subtitle: 'Te esperamos' }
     ]
@@ -126,7 +136,7 @@ const SITE_TEMPLATES = [
     description: 'Plantilla para e-commerce con catálogo y carrito de compras',
     sections: [
       { type: 'hero', title: 'Tienda Online Premium', subtitle: 'Productos de calidad para ti', bgImage: '' },
-      { type: 'services', title: 'Nuestros Productos', items: [{ name: 'Producto 1', desc: 'Descripción del producto', price: '$49' }, { name: 'Producto 2', desc: 'Descripción del producto', price: '$79' }, { name: 'Producto 3', desc: 'Descripción del producto', price: '$29' }] },
+      { type: 'services', title: 'Nuestros Productos', items: [{ name: 'Producto 1', desc: 'Descripción del producto', price: 49 }, { name: 'Producto 2', desc: 'Descripción del producto', price: 79 }, { name: 'Producto 3', desc: 'Descripción del producto', price: 29 }] },
       { type: 'testimonials', title: 'Opiniones de clientes', items: [{ text: 'Excelente calidad y servicio', author: 'Ana P.' }, { text: 'Envío rápido y producto perfecto', author: 'Luis M.' }] },
       { type: 'contact', title: 'Contáctanos', subtitle: 'Estamos aquí para ayudarte' }
     ]
@@ -140,7 +150,7 @@ const SITE_TEMPLATES = [
     description: 'Plantilla profesional para clínicas y consultorios médicos',
     sections: [
       { type: 'hero', title: 'Tu salud es nuestra prioridad', subtitle: 'Atención médica de calidad', bgImage: '' },
-      { type: 'services', title: 'Nuestros Servicios', items: [{ name: 'Consulta General', desc: 'Evaluación médica completa', price: '$80' }, { name: 'Especialidades', desc: 'Atención especializada', price: '$120' }, { name: 'Chequeo Preventivo', desc: 'Exámenes y análisis', price: '$150' }] },
+      { type: 'services', title: 'Nuestros Servicios', items: [{ name: 'Consulta General', desc: 'Evaluación médica completa', price: 80 }, { name: 'Especialidades', desc: 'Atención especializada', price: 120 }, { name: 'Chequeo Preventivo', desc: 'Exámenes y análisis', price: 150 }] },
       { type: 'testimonials', title: 'Testimonios', items: [{ text: 'Excelente atención médica', author: 'Roberto S.' }, { text: 'Muy profesionales y amables', author: 'Laura F.' }] },
       { type: 'contact', title: 'Agenda tu cita', subtitle: 'Llámanos o escríbenos' }
     ]
@@ -154,7 +164,7 @@ const SITE_TEMPLATES = [
     description: 'Plantilla para escuelas y cursos online con clases virtuales',
     sections: [
       { type: 'hero', title: 'Aprende con los mejores', subtitle: 'Educación de calidad a tu alcance', bgImage: '' },
-      { type: 'services', title: 'Nuestros Cursos', items: [{ name: 'Curso Básico', desc: 'Fundamentos del área', price: '$99' }, { name: 'Curso Avanzado', desc: 'Nivel profesional', price: '$199' }, { name: 'Mentoría 1:1', desc: 'Sesión personalizada', price: '$150' }] },
+      { type: 'services', title: 'Nuestros Cursos', items: [{ name: 'Curso Básico', desc: 'Fundamentos del área', price: 99 }, { name: 'Curso Avanzado', desc: 'Nivel profesional', price: 199 }, { name: 'Mentoría 1:1', desc: 'Sesión personalizada', price: 150 }] },
       { type: 'testimonials', title: 'Estudiantes destacados', items: [{ text: 'Transformó mi carrera profesional', author: 'Pedro A.' }, { text: 'Los mejores instructores', author: 'Sofia L.' }] },
       { type: 'contact', title: 'Inscríbete ahora', subtitle: 'Da el primer paso' }
     ]
@@ -168,7 +178,7 @@ const SITE_TEMPLATES = [
     description: 'Plantilla moderna para startups y empresas de tecnología',
     sections: [
       { type: 'hero', title: 'Innovación digital', subtitle: 'Soluciones tecnológicas para el futuro', bgImage: '' },
-      { type: 'services', title: 'Nuestros Servicios', items: [{ name: 'Desarrollo Web', desc: 'Aplicaciones web modernas', price: '$2,500' }, { name: 'App Móvil', desc: 'iOS y Android', price: '$5,000' }, { name: 'Consultoría Tech', desc: 'Estrategia digital', price: '$200/h' }] },
+      { type: 'services', title: 'Nuestros Servicios', items: [{ name: 'Desarrollo Web', desc: 'Aplicaciones web modernas', price: 2500 }, { name: 'App Móvil', desc: 'iOS y Android', price: 5000 }, { name: 'Consultoría Tech', desc: 'Estrategia digital', price: '200/h' }] },
       { type: 'testimonials', title: 'Clientes satisfechos', items: [{ text: 'Transformaron nuestro negocio', author: 'Empresa XYZ' }, { text: 'Soluciones innovadoras y eficientes', author: 'Tech Corp' }] },
       { type: 'contact', title: 'Contáctanos', subtitle: 'Hablemos de tu proyecto' }
     ]
@@ -182,7 +192,7 @@ const SITE_TEMPLATES = [
     description: 'Plantilla visual para fotógrafos y estudios creativos',
     sections: [
       { type: 'hero', title: 'Capturamos tus momentos', subtitle: 'Fotografía profesional', bgImage: '' },
-      { type: 'services', title: 'Nuestros Servicios', items: [{ name: 'Sesión Fotográfica', desc: '1 hora de sesión', price: '$200' }, { name: 'Book Profesional', desc: 'Pack completo', price: '$450' }, { name: 'Evento', desc: 'Cobertura de eventos', price: '$800' }] },
+      { type: 'services', title: 'Nuestros Servicios', items: [{ name: 'Sesión Fotográfica', desc: '1 hora de sesión', price: 200 }, { name: 'Book Profesional', desc: 'Pack completo', price: 450 }, { name: 'Evento', desc: 'Cobertura de eventos', price: 800 }] },
       { type: 'testimonials', title: 'Opiniones', items: [{ text: 'Fotos increíbles, superó mis expectativas', author: 'Elena R.' }, { text: 'Muy profesional y creativo', author: 'Miguel T.' }] },
       { type: 'contact', title: 'Reserva tu sesión', subtitle: 'Creemos algo juntos' }
     ]
@@ -497,12 +507,12 @@ function applyFilters() {
 $('#searchInput').addEventListener('input', (e) => { currentFilters.search = e.target.value; applyFilters(); });
 $('#searchBtn').addEventListener('click', () => { currentFilters.search = $('#searchInput').value; applyFilters(); });
 $('#categoryFilters').addEventListener('change', (e) => { if (e.target.name === 'category') { currentFilters.category = e.target.value; applyFilters(); } });
-$('#priceFilter').addEventListener('input', (e) => { currentFilters.maxPrice = parseInt(e.target.value); $('#priceFilterValue').textContent = '$' + parseInt(e.target.value).toLocaleString(); applyFilters(); });
+$('#priceFilter').addEventListener('input', (e) => { currentFilters.maxPrice = parseInt(e.target.value); $('#priceFilterValue').textContent = formatCurrency(parseInt(e.target.value)); applyFilters(); });
 $('#ratingFilters').addEventListener('change', (e) => { if (e.target.name === 'rating') { currentFilters.minRating = parseInt(e.target.value); applyFilters(); } });
 $('#sortFilter').addEventListener('change', (e) => { currentFilters.sort = e.target.value; applyFilters(); });
 $('#clearFilters').addEventListener('click', () => {
   currentFilters = { category: '', search: '', maxPrice: 1000, minRating: 0, sort: 'featured' };
-  $('#searchInput').value = ''; $('#priceFilter').value = 1000; $('#priceFilterValue').textContent = '$1,000';
+  $('#searchInput').value = ''; $('#priceFilter').value = 1000; $('#priceFilterValue').textContent = formatCurrency(1000);
   $('#sortFilter').value = 'featured';
   $$('#categoryFilters input, #ratingFilters input').forEach(i => i.checked = false);
   applyFilters();
@@ -517,7 +527,7 @@ function renderServiceCard(s) {
   const isFav = favs.includes(s.id);
   const gradient = getCategoryGradient(s.category);
   const avatarLetter = s.professionalName?.charAt(0) || '?';
-  return `<div class="service-card" data-service-id="${s.id}"><div class="service-card-img" style="background:${gradient}"><span style="filter:grayscale(0.1)">${getCategoryIcon(s.category)}</span>${user ? `<button class="service-card-favorite ${isFav ? 'active' : ''}" data-fav-id="${s.id}">${isFav ? '♥' : '♡'}</button>` : ''}</div><div class="service-card-body"><div class="service-card-category">${getCategoryName(s.category)}</div><div class="service-card-title">${s.title}</div><div class="service-card-desc">${s.shortDesc}</div><div class="service-card-pro"><span class="service-card-avatar">${avatarLetter}</span><span class="service-card-pro-name">${s.professionalName}</span></div></div><div class="service-card-footer"><span class="service-card-price">$${s.price.toLocaleString()}</span><span class="service-card-rating"><span class="stars">${renderStars(s.rating)}</span> ${s.rating} (${s.reviewCount})</span></div></div>`;
+  return `<div class="service-card" data-service-id="${s.id}"><div class="service-card-img" style="background:${gradient}"><span style="filter:grayscale(0.1)">${getCategoryIcon(s.category)}</span>${user ? `<button class="service-card-favorite ${isFav ? 'active' : ''}" data-fav-id="${s.id}">${isFav ? '♥' : '♡'}</button>` : ''}</div><div class="service-card-body"><div class="service-card-category">${getCategoryName(s.category)}</div><div class="service-card-title">${s.title}</div><div class="service-card-desc">${s.shortDesc}</div><div class="service-card-pro"><span class="service-card-avatar">${avatarLetter}</span><span class="service-card-pro-name">${s.professionalName}</span></div></div><div class="service-card-footer"><span class="service-card-price">${formatCurrency(s.price)}</span><span class="service-card-rating"><span class="stars">${renderStars(s.rating)}</span> ${s.rating} (${s.reviewCount})</span></div></div>`;
 }
 
 function bindServiceCards() {
@@ -545,7 +555,7 @@ function renderServiceDetail(serviceId) {
   if (!service) return;
   const user = store.getUser();
   const gradient = getCategoryGradient(service.category);
-  const html = `<div class="service-detail-header"><div><div class="service-detail-hero" style="background:${gradient}"><span style="filter:grayscale(0.1)">${getCategoryIcon(service.category)}</span></div><div class="service-detail-info"><span class="service-card-category">${getCategoryName(service.category)}</span><h1>${service.title}</h1><div class="service-card-pro" style="cursor:pointer" data-profile-id="${service.professionalId}"><span class="service-card-avatar">${service.professionalName.charAt(0)}</span><span class="service-card-pro-name">${service.professionalName}</span></div><div class="service-detail-description">${service.description}</div><div class="service-detail-tags">${service.tags.map(t => `<span class="service-tag">${t}</span>`).join('')}</div></div></div><div class="service-detail-sidebar"><div class="sidebar-price">$${service.price.toLocaleString()}</div><p class="sidebar-delivery">Entrega en ${service.delivery} días</p><div class="service-card-rating" style="margin-bottom:20px"><span class="stars">${renderStars(service.rating)}</span> ${service.rating} (${service.reviewCount} reseñas)</div><div class="sidebar-pro" data-profile-id="${service.professionalId}"><span class="sidebar-pro-avatar">${service.professionalName.charAt(0)}</span><div class="sidebar-pro-info"><h4>${service.professionalName}</h4><p>${getCategoryName(service.category)}</p></div></div>${user && user.role === 'client' ? `<button class="btn btn-primary btn-block" id="requestServiceBtn" data-service-id="${service.id}">Solicitar servicio</button>` : !user ? `<button class="btn btn-primary btn-block" data-navigate="login">Inicia sesión para contratar</button>` : `<p style="text-align:center;color:var(--text-tertiary);font-size:14px;margin-top:12px">Solo los clientes pueden solicitar servicios</p>`}</div></div>`;
+  const html = `<div class="service-detail-header"><div><div class="service-detail-hero" style="background:${gradient}"><span style="filter:grayscale(0.1)">${getCategoryIcon(service.category)}</span></div><div class="service-detail-info"><span class="service-card-category">${getCategoryName(service.category)}</span><h1>${service.title}</h1><div class="service-card-pro" style="cursor:pointer" data-profile-id="${service.professionalId}"><span class="service-card-avatar">${service.professionalName.charAt(0)}</span><span class="service-card-pro-name">${service.professionalName}</span></div><div class="service-detail-description">${service.description}</div><div class="service-detail-tags">${service.tags.map(t => `<span class="service-tag">${t}</span>`).join('')}</div></div></div><div class="service-detail-sidebar"><div class="sidebar-price">${formatCurrency(service.price)}</div><p class="sidebar-delivery">Entrega en ${service.delivery} días</p><div class="service-card-rating" style="margin-bottom:20px"><span class="stars">${renderStars(service.rating)}</span> ${service.rating} (${service.reviewCount} reseñas)</div><div class="sidebar-pro" data-profile-id="${service.professionalId}"><span class="sidebar-pro-avatar">${service.professionalName.charAt(0)}</span><div class="sidebar-pro-info"><h4>${service.professionalName}</h4><p>${getCategoryName(service.category)}</p></div></div>${user && user.role === 'client' ? `<button class="btn btn-primary btn-block" id="requestServiceBtn" data-service-id="${service.id}">Solicitar servicio</button>` : !user ? `<button class="btn btn-primary btn-block" data-navigate="login">Inicia sesión para contratar</button>` : `<p style="text-align:center;color:var(--text-tertiary);font-size:14px;margin-top:12px">Solo los clientes pueden solicitar servicios</p>`}</div></div>`;
   $('#serviceDetail').innerHTML = html;
   $('#requestServiceBtn')?.addEventListener('click', () => { openRequestModal(service); });
   $$('[data-profile-id]').forEach(el => { el.addEventListener('click', () => { renderProfile(el.dataset.profileId); showPage('profile'); }); });
@@ -571,7 +581,7 @@ function openRequestModal(service) {
   if (user.id === service.professionalId) { toast('No puedes solicitar tu propio servicio', 'error'); return; }
   $('#requestServiceName').value = service.title;
   $('#requestProfessional').value = service.professionalName;
-  $('#requestPrice').value = '$' + service.price.toLocaleString() + ' USD';
+  $('#requestPrice').value = formatCurrency(service.price);
   $('#requestServiceId').value = service.id;
   $('#requestProfessionalId').value = service.professionalId;
   $('#requestMessage').value = '';
@@ -623,7 +633,7 @@ function renderClientRequests(requests) {
   if (requests.length === 0) { container.innerHTML = '<div class="request-empty">No has enviado solicitudes aún.</div>'; return; }
   container.innerHTML = [...requests].reverse().map(r => {
     const labels = { pending: 'Pendiente', accepted: 'Aceptada', rejected: 'Rechazada', completed: 'Completada' };
-    return `<div class="request-card"><div class="request-info"><h4>${r.serviceName}</h4><p>Profesional: ${r.professionalName} — $${r.price.toLocaleString()} USD</p><p style="margin-top:4px">${r.message}</p></div><span class="badge badge-${r.status}">${labels[r.status]}</span></div>`;
+    return `<div class="request-card"><div class="request-info"><h4>${r.serviceName}</h4><p>Profesional: ${r.professionalName} — ${formatCurrency(r.price)}</p><p style="margin-top:4px">${r.message}</p></div><span class="badge badge-${r.status}">${labels[r.status]}</span></div>`;
   }).join('');
 }
 function renderClientFavorites() {
@@ -660,7 +670,7 @@ function renderProDashboard() {
   const avgRating = myServices.length > 0 ? (myServices.reduce((a, s) => a + s.rating, 0) / myServices.length).toFixed(1) : '—';
   $('#proTotalServices').textContent = myServices.length;
   $('#proTotalRequests').textContent = myRequests.length;
-  $('#proTotalEarnings').textContent = '$' + Math.round(netEarnings).toLocaleString();
+  $('#proTotalEarnings').textContent = formatCurrency(netEarnings);
   $('#proAvgRating').textContent = avgRating;
   const recent = myRequests.slice(-5).reverse();
   if (recent.length > 0) {
@@ -678,7 +688,7 @@ function renderProDashboard() {
 function renderProServices(myServices) {
   const container = $('#proServicesList');
   if (myServices.length === 0) { container.innerHTML = '<div class="request-empty">No has publicado servicios aún.</div>'; return; }
-  container.innerHTML = myServices.map(s => `<div class="my-service-card"><span class="service-icon">${getCategoryIcon(s.category)}</span><div class="service-info"><h4>${s.title}</h4><p>${getCategoryName(s.category)} — ${s.reviewCount} reseñas — ${s.rating} ★</p></div><span class="service-price">$${s.price.toLocaleString()}</span><div class="my-service-actions"><button class="btn btn-ghost btn-sm" onclick="editService('${s.id}')">Editar</button><button class="btn btn-danger btn-sm" onclick="deleteService('${s.id}')">Eliminar</button></div></div>`).join('');
+  container.innerHTML = myServices.map(s => `<div class="my-service-card"><span class="service-icon">${getCategoryIcon(s.category)}</span><div class="service-info"><h4>${s.title}</h4><p>${getCategoryName(s.category)} — ${s.reviewCount} reseñas — ${s.rating} ★</p></div><span class="service-price">${formatCurrency(s.price)}</span><div class="my-service-actions"><button class="btn btn-ghost btn-sm" onclick="editService('${s.id}')">Editar</button><button class="btn btn-danger btn-sm" onclick="deleteService('${s.id}')">Eliminar</button></div></div>`).join('');
 }
 function renderProRequests(myRequests) {
   const container = $('#proRequestsList');
@@ -686,20 +696,20 @@ function renderProRequests(myRequests) {
   container.innerHTML = [...myRequests].reverse().map(r => {
     const labels = { pending: 'Pendiente', accepted: 'Aceptada', rejected: 'Rechazada', completed: 'Completada' };
     const canRespond = r.status === 'pending';
-    return `<div class="request-card"><div class="request-info"><h4>${r.serviceName}</h4><p>Cliente: ${r.clientName} — $${r.price.toLocaleString()} USD</p><p style="margin-top:4px;font-style:italic">"${r.message}"</p><p style="margin-top:2px;font-size:12px;color:var(--text-tertiary)">${formatDate(r.createdAt)}</p></div><div style="display:flex;align-items:center;gap:8px"><span class="badge badge-${r.status}">${labels[r.status]}</span>${canRespond ? `<button class="btn btn-success btn-sm" onclick="respondRequest('${r.id}','accepted')">Aceptar</button><button class="btn btn-danger btn-sm" onclick="respondRequest('${r.id}','rejected')">Rechazar</button>` : ''}${r.status === 'accepted' ? `<button class="btn btn-primary btn-sm" onclick="respondRequest('${r.id}','completed')">Marcar completado</button>` : ''}</div></div>`;
+    return `<div class="request-card"><div class="request-info"><h4>${r.serviceName}</h4><p>Cliente: ${r.clientName} — ${formatCurrency(r.price)}</p><p style="margin-top:4px;font-style:italic">"${r.message}"</p><p style="margin-top:2px;font-size:12px;color:var(--text-tertiary)">${formatDate(r.createdAt)}</p></div><div style="display:flex;align-items:center;gap:8px"><span class="badge badge-${r.status}">${labels[r.status]}</span>${canRespond ? `<button class="btn btn-success btn-sm" onclick="respondRequest('${r.id}','accepted')">Aceptar</button><button class="btn btn-danger btn-sm" onclick="respondRequest('${r.id}','rejected')">Rechazar</button>` : ''}${r.status === 'accepted' ? `<button class="btn btn-primary btn-sm" onclick="respondRequest('${r.id}','completed')">Marcar completado</button>` : ''}</div></div>`;
   }).join('');
 }
 function renderEarnings(completedRequests, gross, net) {
-  $('#earningsGross').textContent = '$' + Math.round(gross).toLocaleString();
-  $('#earningsFee').textContent = '$' + Math.round(gross * COMMISSION_RATE).toLocaleString();
-  $('#earningsNet').textContent = '$' + Math.round(net).toLocaleString();
+  $('#earningsGross').textContent = formatCurrency(gross);
+  $('#earningsFee').textContent = formatCurrency(gross * COMMISSION_RATE);
+  $('#earningsNet').textContent = formatCurrency(net);
   $('#earningsProjects').textContent = completedRequests.length;
   const history = $('#earningsHistory');
   if (completedRequests.length === 0) { history.innerHTML = '<div class="transaction-empty">No hay transacciones completadas aún</div>'; return; }
   history.innerHTML = [...completedRequests].reverse().map(r => {
     const fee = r.price * COMMISSION_RATE;
     const netVal = r.price - fee;
-    return `<div class="transaction-item"><div><strong>${r.serviceName}</strong><p style="font-size:13px;color:var(--text-secondary)">Cliente: ${r.clientName} — ${formatDate(r.createdAt)}</p></div><div style="text-align:right"><span class="transaction-amount">+$${Math.round(netVal).toLocaleString()}</span><span class="transaction-fee">Comisión: -$${Math.round(fee).toLocaleString()}</span></div></div>`;
+    return `<div class="transaction-item"><div><strong>${r.serviceName}</strong><p style="font-size:13px;color:var(--text-secondary)">Cliente: ${r.clientName} — ${formatDate(r.createdAt)}</p></div><div style="text-align:right"><span class="transaction-amount">+${formatCurrency(netVal)}</span><span class="transaction-fee">Comisión: -${formatCurrency(fee)}</span></div></div>`;
   }).join('');
 }
 function renderProSettings() {
@@ -788,7 +798,7 @@ function renderHome() {
     <div class="section section-dark"><div class="container"><div class="section-header"><h2 class="section-title">¿Cómo funciona?</h2><p class="section-subtitle">Tres pasos para tener tu sitio web online</p></div><div class="steps-grid"><div class="step-card"><div class="step-number">01</div><h3>Elige una plantilla</h3><p>Selecciona entre nuestras plantillas profesionales diseñadas para cada tipo de negocio</p></div><div class="step-card"><div class="step-number">02</div><h3>Personaliza</h3><p>Edita colores, textos, imágenes y secciones con nuestro editor visual intuitivo</p></div><div class="step-card"><div class="step-number">03</div><h3>Publica</h3><p>Un clic y tu sitio está online con hosting incluido y dominio personalizado</p></div></div></div></div>
     <div class="section"><div class="container"><div class="section-header"><h2 class="section-title">¿Por qué elegirnos?</h2><p class="section-subtitle">Todo lo que necesitas para crear tu presencia digital</p></div><div class="benefits-grid"><div class="benefit-card"><div class="benefit-icon">⚡</div><h3>Ultrarrápido</h3><p>Sites optimizados con CDN global y carga instantánea</p></div><div class="benefit-card"><div class="benefit-icon">🎨</div><h3>Personalizable</h3><p>Colores, fuentes, secciones y contenido editables al instante</p></div><div class="benefit-card"><div class="benefit-icon">📱</div><h3>Responsive</h3><p>Tus sitios se ven perfectos en móvil, tablet y escritorio</p></div><div class="benefit-card"><div class="benefit-icon">🔍</div><h3>SEO optimizado</h3><p>Meta tags, sitemap y estructura optimizada para Google</p></div><div class="benefit-card"><div class="benefit-icon">🔒</div><h3>SSL incluido</h3><p>Certificado de seguridad gratuito para todos los sitios</p></div><div class="benefit-card"><div class="benefit-icon">📊</div><h3>Analytics</h3><p>Estadísticas de visitantes y rendimiento en tiempo real</p></div></div></div></div>
     <div class="section section-dark"><div class="container"><div class="section-header"><h2 class="section-title">Plantillas destacadas</h2><p class="section-subtitle">Diseños profesionales listos para personalizar</p></div><div class="templates-grid">${templates.map(t => `<div class="template-card"><div class="template-preview" style="background:${t.gradient}"><span class="template-preview-icon">${t.icon}</span></div><div class="template-card-body"><h3>${t.name}</h3><p>${t.description}</p><button class="btn btn-primary btn-sm" data-navigate="templates">Ver plantillas</button></div></div>`).join('')}</div></div></div>
-    <div class="section"><div class="container"><div class="section-header"><h2 class="section-title">Planes y precios</h2><p class="section-subtitle">Elige el plan que mejor se adapte a tu negocio</p></div><div class="pricing-grid">${Object.values(PLANS).map(plan => `<div class="pricing-card ${plan.id === 'pro' ? 'pricing-featured' : ''}">${plan.id === 'pro' ? '<div class="pricing-badge">Más popular</div>' : ''}<h3 class="pricing-name">${plan.name}</h3><div class="pricing-price"><span class="pricing-amount">${plan.price === 0 ? 'Gratis' : '$' + plan.price}</span>${plan.price > 0 ? '<span class="pricing-period">/' + plan.period + '</span>' : ''}</div><ul class="pricing-features">${plan.features.map(f => `<li>✓ ${f}</li>`).join('')}</ul><button class="btn ${plan.id === 'pro' ? 'btn-primary' : 'btn-outline'} btn-block" data-navigate="${store.getUser() ? 'pricing' : 'register'}">${plan.price === 0 ? 'Empezar gratis' : 'Seleccionar plan'}</button></div>`).join('')}</div></div></div>
+    <div class="section"><div class="container"><div class="section-header"><h2 class="section-title">Planes y precios</h2><p class="section-subtitle">Elige el plan que mejor se adapte a tu negocio</p></div><div class="pricing-grid">${Object.values(PLANS).map(plan => `<div class="pricing-card ${plan.id === 'pro' ? 'pricing-featured' : ''}">${plan.id === 'pro' ? '<div class="pricing-badge">Más popular</div>' : ''}<h3 class="pricing-name">${plan.name}</h3><div class="pricing-price"><span class="pricing-amount">${plan.price === 0 ? 'Gratis' : formatCurrency(plan.price)}</span>${plan.price > 0 ? '<span class="pricing-period">/' + plan.period + '</span>' : ''}</div><ul class="pricing-features">${plan.features.map(f => `<li>✓ ${f}</li>`).join('')}</ul><button class="btn ${plan.id === 'pro' ? 'btn-primary' : 'btn-outline'} btn-block" data-navigate="${store.getUser() ? 'pricing' : 'register'}">${plan.price === 0 ? 'Empezar gratis' : 'Seleccionar plan'}</button></div>`).join('')}</div></div></div>
     <div class="section section-dark"><div class="container"><div class="section-header"><h2 class="section-title">Preguntas frecuentes</h2><p class="section-subtitle">Resolvemos tus dudas</p></div><div class="faq-list"><div class="faq-item"><div class="faq-question">¿Necesito saber programar?</div><div class="faq-answer">No, para nada. Nuestro editor visual te permite crear y personalizar tu sitio sin escribir una sola línea de código.</div></div><div class="faq-item"><div class="faq-question">¿Puedo usar mi propio dominio?</div><div class="faq-answer">Sí, con los planes Pro y Business puedes conectar tu propio dominio personalizado.</div></div><div class="faq-item"><div class="faq-question">¿Hay costo de hosting?</div><div class="faq-answer">No, el hosting está incluido en todos los planes con CDN, SSL y backups automáticos.</div></div><div class="faq-item"><div class="faq-question">¿Puedo cambiar de plan después?</div><div class="faq-answer">Sí, puedes actualizar o reducir tu plan en cualquier momento.</div></div><div class="faq-item"><div class="faq-question">¿Mis datos están seguros?</div><div class="faq-answer">Absolutamente. Usamos encriptación SSL, backups diarios, y cumplimos con GDPR.</div></div></div></div></div>
     <div class="section cta-section"><div class="container"><div class="cta-card"><h2>¿Listo para crear tu sitio?</h2><p>Empieza gratis hoy mismo. Sin tarjeta de crédito, sin compromiso.</p><button class="btn btn-primary btn-lg" data-navigate="templates">Comenzar ahora</button></div></div></div>
     <footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><span class="logo-icon">◆</span><span class="logo-text">WebEmpire</span><p>Crea sitios web profesionales en minutos.</p></div><div class="footer-col"><h4>Producto</h4><a href="#" data-navigate="templates">Plantillas</a><a href="#" data-navigate="pricing">Precios</a><a href="#" data-navigate="marketplace">Servicios</a></div><div class="footer-col"><h4>Empresa</h4><a href="#">Sobre nosotros</a><a href="#">Blog</a><a href="#">Contacto</a></div><div class="footer-col"><h4>Legal</h4><a href="#">Términos</a><a href="#">Privacidad</a></div></div><div class="footer-bottom"><p>© 2026 WebEmpire. Todos los derechos reservados.</p></div></div></footer>`;
@@ -1143,7 +1153,7 @@ function updateSectionProperty(index, path, value) {
 function addServiceItem(sectionIndex) {
   const site = store.getSites().find(s => s.id === window._editorSiteId);
   if (!site) return;
-  site.sections[sectionIndex].items.push({ name: 'Nuevo servicio', desc: 'Descripción', price: '$0' });
+  site.sections[sectionIndex].items.push({ name: 'Nuevo servicio', desc: 'Descripción', price: '0' });
   store.setSites(store.getSites().map(s => s.id === site.id ? site : s));
   renderEditorProperties(site.sections[sectionIndex], sectionIndex);
   renderEditorPreview(site);
@@ -1433,10 +1443,10 @@ function renderPricing() {
             ${isCurrent ? '<div class="pricing-current-badge">Plan actual</div>' : ''}
             <h3 class="pricing-name">${plan.name}</h3>
             <div class="pricing-price">
-              <span class="pricing-amount">${price === 0 ? 'Gratis' : '$' + price}</span>
+              <span class="pricing-amount">${price === 0 ? 'Gratis' : formatCurrency(price)}</span>
               ${price > 0 ? '<span class="pricing-period">/mes</span>' : ''}
             </div>
-            ${isAnnual && price > 0 ? `<p class="pricing-annual">Facturado $${price * 12}/año</p>` : ''}
+            ${isAnnual && price > 0 ? `<p class="pricing-annual">Facturado ${formatCurrency(price * 12)}/año</p>` : ''}
             <ul class="pricing-features">${plan.features.map(f => `<li>✓ ${f}</li>`).join('')}</ul>
             <button class="btn ${plan.id === 'pro' ? 'btn-primary' : 'btn-outline'} btn-block" onclick="selectPlan('${plan.id}')" ${isCurrent ? 'disabled' : ''}>${isCurrent ? 'Plan actual' : price === 0 ? 'Empezar gratis' : 'Seleccionar plan'}</button>
           </div>`;
@@ -1559,7 +1569,7 @@ function renderDashboard() {
           <div class="overview-stats">
             <div class="stat-card"><span class="stat-number">${sites.length}</span><span class="stat-label">Sitios</span></div>
             <div class="stat-card"><span class="stat-number">${sites.filter(s => s.published).length}</span><span class="stat-label">Publicados</span></div>
-            <div class="stat-card"><span class="stat-number">${currentPlan === 'free' ? 'Gratis' : '$' + PLANS[currentPlan]?.price + '/mes'}</span><span class="stat-label">Plan</span></div>
+            <div class="stat-card"><span class="stat-number">${currentPlan === 'free' ? 'Gratis' : formatCurrency(PLANS[currentPlan]?.price) + '/mes'}</span><span class="stat-label">Plan</span></div>
           </div>
           <div class="overview-actions">
             <button class="btn btn-primary" data-navigate="templates">Crear nuevo sitio</button>
@@ -1587,7 +1597,7 @@ function renderDashboard() {
         <div class="dashboard-tab" id="tab-billing">
           <h2>Facturación</h2>
           <div class="billing-plan">
-            <h3>Plan actual: ${currentPlan === 'free' ? 'Gratis' : currentPlan === 'pro' ? 'Profesional ($19/mes)' : 'Business ($49/mes)'}</h3>
+            <h3>Plan actual: ${currentPlan === 'free' ? 'Gratis' : PLANS[currentPlan]?.name + ' (' + formatCurrency(PLANS[currentPlan]?.price) + '/mes)'}</h3>
             <p>${currentPlan === 'free' ? 'Estás en el plan gratuito.' : 'Próxima facturación: ' + new Date(Date.now() + 30*86400000).toLocaleDateString('es-ES')}</p>
             <button class="btn btn-outline btn-sm" data-navigate="pricing">Cambiar plan</button>
           </div>
