@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebEmpire — Crea tu sitio web profesional</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-logo" data-navigate="home">
+        <span class="logo-icon">◆</span>
+        <span class="logo-text">WebEmpire</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="#" data-navigate="home">Inicio</a>
+        <a href="#" data-navigate="templates">Plantillas</a>
+        <a href="#" data-navigate="pricing">Precios</a>
+        <a href="#" data-navigate="marketplace">Servicios</a>
+        <a href="#" id="navFavorites" class="hidden" data-navigate="favorites">Favoritos</a>
+        <a href="#" id="navDashboard" class="hidden" data-navigate="dashboard">Dashboard</a>
+      </div>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" title="Cambiar tema">◐</button>
+        <div id="authButtons">
+          <button class="btn btn-ghost" data-navigate="login">Iniciar sesión</button>
+          <button class="btn btn-primary" data-navigate="register">Registrarse</button>
+        </div>
+        <div id="userMenu" class="hidden">
+          <button class="user-avatar" id="userAvatarBtn">
+            <span id="userAvatarLetter">U</span>
+            <span id="userMenuName" class="user-menu-name">Usuario</span>
+          </button>
+          <div class="dropdown-menu" id="userDropdown">
+            <a href="#" data-navigate="dashboard">Dashboard</a>
+            <a href="#" id="logoutBtn">Cerrar sesión</a>
+          </div>
+        </div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE: HOME -->
+  <section class="page" id="page-home">
+    <div id="homeContent"></div>
+  </section>
+
+  <!-- PAGE: LANDING (legacy marketplace landing) -->
+  <section class="page active" id="page-landing">
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Crea tu sitio web profesional en minutos</h1>
+        <p>Plataforma todo-en-uno para crear, lanzar y gestionar tu presencia digital</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-lg" data-navigate="templates">Ver plantillas</button>
+          <button class="btn btn-ghost btn-lg" data-navigate="marketplace">Explorar servicios</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="categories-section">
+      <div class="container">
+        <h2>Categorías populares</h2>
+        <div class="categories-grid" id="homeCategories"></div>
+      </div>
+    </section>
+
+    <section class="how-it-works">
+      <div class="container">
+        <h2>¿Cómo funciona?</h2>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <h3>Elige una plantilla</h3>
+            <p>Explora nuestra colección de plantillas profesionales y elige la que mejor se adapte a tu negocio.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <h3>Personaliza tu sitio</h3>
+            <p>Adapta colores, textos, imágenes y secciones con nuestro editor intuitivo sin necesidad de código.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <h3>Publica y crece</h3>
+            <p>Lanza tu sitio con un dominio profesional y comienza a atraer clientes de inmediato.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="featured-section">
+      <div class="container">
+        <h2>Servicios destacados</h2>
+        <div class="featured-grid" id="featuredServices"></div>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <div class="container">
+        <h2>¿Listo para crear tu sitio web?</h2>
+        <p>Únete a miles de profesionales que ya confían en WebEmpire</p>
+        <button class="btn btn-primary btn-lg" data-navigate="register">Comenzar gratis</button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-col">
+            <h4>WebEmpire</h4>
+            <p>La plataforma todo-en-uno para tu presencia digital profesional.</p>
+          </div>
+          <div class="footer-col">
+            <h4>Producto</h4>
+            <a href="#" data-navigate="templates">Plantillas</a>
+            <a href="#" data-navigate="pricing">Precios</a>
+            <a href="#" data-navigate="marketplace">Servicios</a>
+          </div>
+          <div class="footer-col">
+            <h4>Soporte</h4>
+            <a href="#">Centro de ayuda</a>
+            <a href="#">Contacto</a>
+            <a href="#">Documentación</a>
+          </div>
+          <div class="footer-col">
+            <h4>Legal</h4>
+            <a href="#">Privacidad</a>
+            <a href="#">Términos</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 WebEmpire. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </footer>
+  </section>
+
+  <!-- PAGE: LOGIN -->
+  <section class="page" id="page-login">
+    <div class="auth-page">
+      <div class="auth-card">
+        <div class="auth-header">
+          <h1>Iniciar sesión</h1>
+          <p>Accede a tu cuenta</p>
+        </div>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail">Correo electrónico</label>
+            <input type="email" id="loginEmail" placeholder="tu@email.com" required>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Contraseña</label>
+            <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Iniciar sesión</button>
+        </form>
+        <div class="auth-footer">
+          <p>¿No tienes cuenta? <a href="#" data-navigate="register">Regístrate aquí</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE: REGISTER -->
+  <section class="page" id="page-register">
+    <div class="auth-page">
+      <div class="auth-card">
+        <div class="auth-header">
+          <h1>Crear cuenta</h1>
+          <p>Únete a nuestra comunidad</p>
+        </div>
+        <form id="registerForm">
+          <div class="form-group">
+            <label for="registerName">Nombre completo</label>
+            <input type="text" id="registerName" placeholder="Tu nombre" required>
+          </div>
+          <div class="form-group">
+            <label for="registerEmail">Correo electrónico</label>
+            <input type="email" id="registerEmail" placeholder="tu@email.com" required>
+          </div>
+          <div class="form-group">
+            <label for="registerPassword">Contraseña</label>
+            <input type="password" id="registerPassword" placeholder="Crea una contraseña" required>
+          </div>
+          <div class="form-group">
+            <label for="registerRole">Tipo de cuenta</label>
+            <select id="registerRole">
+              <option value="">Selecciona un rol</option>
+              <option value="client">Cliente</option>
+              <option value="professional">Profesional</option>
+            </select>
+          </div>
+          <div id="professionalCategoryGroup" class="form-group hidden">
+            <label for="registerCategory">Categoría profesional</label>
+            <select id="registerCategory">
+              <option value="">Selecciona una categoría</option>
+              <option value="web-design">Diseño Web</option>
+              <option value="development">Desarrollo</option>
+              <option value="copywriting">Redacción</option>
+              <option value="seo">SEO</option>
+              <option value="marketing">Marketing Digital</option>
+              <option value="branding">Branding</option>
+              <option value="photography">Fotografía</option>
+              <option value="video">Producción de Video</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Crear cuenta</button>
+        </form>
+        <div class="auth-footer">
+          <p>¿Ya tienes cuenta? <a href="#" data-navigate="login">Inicia sesión</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE: MARKETPLACE -->
+  <section class="page" id="page-marketplace">
+    <div class="marketplace-header">
+      <div class="container">
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="Buscar servicios...">
+          <button id="searchBtn" class="btn btn-primary">Buscar</button>
+        </div>
+      </div>
+    </div>
+    <div class="marketplace-layout container">
+      <aside class="filters-sidebar" id="filtersSidebar">
+        <div class="filters-header">
+          <h3>Filtros</h3>
+          <button id="closeFilters" class="btn-close">&times;</button>
+        </div>
+        <div class="filter-group" id="categoryFilters">
+          <h4>Categoría</h4>
+        </div>
+        <div class="filter-group" id="priceFilter">
+          <h4>Precio</h4>
+          <input type="range" id="priceRange" min="0" max="1000" value="1000">
+          <span id="priceFilterValue">Hasta $1000</span>
+        </div>
+        <div class="filter-group" id="ratingFilters">
+          <h4>Valoración</h4>
+        </div>
+        <div class="filter-group">
+          <h4>Ordenar por</h4>
+          <select id="sortFilter">
+            <option value="relevance">Relevancia</option>
+            <option value="price-low">Precio: menor a mayor</option>
+            <option value="price-high">Precio: mayor a menor</option>
+            <option value="rating">Mejor valorados</option>
+            <option value="newest">Más recientes</option>
+          </select>
+        </div>
+        <button id="clearFilters" class="btn btn-ghost btn-full">Limpiar filtros</button>
+      </aside>
+      <main class="marketplace-main">
+        <button id="openFilters" class="btn btn-ghost btn-filters-mobile">Filtros</button>
+        <div class="results-header">
+          <span id="resultsCount">0 servicios encontrados</span>
+        </div>
+        <div class="marketplace-grid" id="marketplaceServices"></div>
+        <div id="emptyMarketplace" class="empty-state hidden">
+          <p>No se encontraron servicios</p>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <!-- PAGE: SERVICE -->
+  <section class="page" id="page-service">
+    <div class="container page-inner">
+      <button class="btn btn-ghost back-btn" data-navigate="marketplace">← Volver al marketplace</button>
+      <div id="serviceDetail"></div>
+    </div>
+  </section>
+
+  <!-- PAGE: PROFILE -->
+  <section class="page" id="page-profile">
+    <div class="container page-inner">
+      <button class="btn btn-ghost back-btn" data-navigate="marketplace">← Volver</button>
+      <div id="profileContent"></div>
+    </div>
+  </section>
+
+  <!-- PAGE: CLIENT DASHBOARD -->
+  <section class="page" id="page-client-dashboard">
+    <div class="dashboard-layout">
+      <aside class="dashboard-sidebar">
+        <div class="sidebar-header">
+          <div class="avatar" id="clientAvatar">C</div>
+          <h3 id="clientName">Cliente</h3>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="#" class="sidebar-tab active" data-tab="client-overview">Resumen</a>
+          <a href="#" class="sidebar-tab" data-tab="client-requests">Mis solicitudes</a>
+          <a href="#" class="sidebar-tab" data-tab="client-favorites">Favoritos</a>
+          <a href="#" class="sidebar-tab" data-tab="client-settings">Configuración</a>
+        </nav>
+      </aside>
+      <main class="dashboard-main">
+        <div class="dashboard-tabs">
+          <div class="tab-content active" id="tab-client-overview">
+            <h2>Resumen</h2>
+            <div class="stats-grid">
+              <div class="stat-card">
+                <span class="stat-value" id="clientTotalRequests">0</span>
+                <span class="stat-label">Total solicitudes</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-value" id="clientActiveRequests">0</span>
+                <span class="stat-label">Solicitudes activas</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-value" id="clientFavoritesCount">0</span>
+                <span class="stat-label">Favoritos</span>
+              </div>
+            </div>
+            <div class="activity-section">
+              <h3>Actividad reciente</h3>
+              <div id="clientRecentActivity"></div>
+            </div>
+          </div>
+          <div class="tab-content" id="tab-client-requests">
+            <h2>Mis solicitudes</h2>
+            <div id="clientRequestsList"></div>
+          </div>
+          <div class="tab-content" id="tab-client-favorites">
+            <h2>Favoritos</h2>
+            <div id="clientFavoritesGrid"></div>
+          </div>
+          <div class="tab-content" id="tab-client-settings">
+            <h2>Configuración</h2>
+            <form id="clientSettingsForm"></form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <!-- PAGE: PROFESSIONAL DASHBOARD -->
+  <section class="page" id="page-professional-dashboard">
+    <div class="dashboard-layout">
+      <aside class="dashboard-sidebar">
+        <div class="sidebar-header">
+          <div class="avatar" id="proAvatar">P</div>
+          <h3 id="proName">Profesional</h3>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="#" class="sidebar-tab active" data-tab="pro-overview">Resumen</a>
+          <a href="#" class="sidebar-tab" data-tab="pro-services">Mis servicios</a>
+          <a href="#" class="sidebar-tab" data-tab="pro-publish">Publicar servicio</a>
+          <a href="#" class="sidebar-tab" data-tab="pro-requests">Solicitudes</a>
+          <a href="#" class="sidebar-tab" data-tab="pro-earnings">Ganancias</a>
+          <a href="#" class="sidebar-tab" data-tab="pro-settings">Configuración</a>
+        </nav>
+      </aside>
+      <main class="dashboard-main">
+        <div class="dashboard-tabs">
+          <div class="tab-content active" id="tab-pro-overview">
+            <h2>Resumen</h2>
+            <div class="stats-grid">
+              <div class="stat-card">
+                <span class="stat-value" id="proTotalServices">0</span>
+                <span class="stat-label">Servicios publicados</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-value" id="proTotalRequests">0</span>
+                <span class="stat-label">Solicitudes recibidas</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-value" id="proTotalEarnings">$0</span>
+                <span class="stat-label">Ganancias totales</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-value" id="proAvgRating">0</span>
+                <span class="stat-label">Valoración media</span>
+              </div>
+            </div>
+            <div class="activity-section">
+              <h3>Actividad reciente</h3>
+              <div id="proRecentActivity"></div>
+            </div>
+          </div>
+          <div class="tab-content" id="tab-pro-services">
+            <h2>Mis servicios</h2>
+            <div id="proServicesList"></div>
+          </div>
+          <div class="tab-content" id="tab-pro-publish">
+            <h2>Publicar servicio</h2>
+            <form id="publishServiceForm"></form>
+          </div>
+          <div class="tab-content" id="tab-pro-requests">
+            <h2>Solicitudes</h2>
+            <div id="proRequestsList"></div>
+          </div>
+          <div class="tab-content" id="tab-pro-earnings">
+            <h2>Ganancias</h2>
+            <div id="earningsDashboard"></div>
+          </div>
+          <div class="tab-content" id="tab-pro-settings">
+            <h2>Configuración</h2>
+            <form id="proSettingsForm"></form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <!-- PAGE: FAVORITES -->
+  <section class="page" id="page-favorites">
+    <div class="container page-inner">
+      <h1>Mis Favoritos</h1>
+      <div id="favoritesGrid" class="services-grid"></div>
+      <div id="emptyFavorites" class="empty-state hidden">
+        <p>No tienes servicios guardados en favoritos.</p>
+        <button class="btn btn-primary" data-navigate="marketplace">Explorar servicios</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE: ONBOARDING -->
+  <section class="page" id="page-onboarding">
+    <div id="onboardingContent"></div>
+  </section>
+
+  <!-- PAGE: TEMPLATES -->
+  <section class="page" id="page-templates">
+    <div id="templatesContent"></div>
+  </section>
+
+  <!-- PAGE: CREATE SITE -->
+  <section class="page" id="page-create-site">
+    <div id="createSiteContent"></div>
+  </section>
+
+  <!-- PAGE: EDITOR -->
+  <section class="page" id="page-editor">
+    <div id="editorContent"></div>
+  </section>
+
+  <!-- PAGE: PREVIEW -->
+  <section class="page" id="page-preview">
+    <div id="previewContent"></div>
+  </section>
+
+  <!-- PAGE: PROJECTS -->
+  <section class="page" id="page-projects">
+    <div id="projectsContent"></div>
+  </section>
+
+  <!-- PAGE: SITE DASHBOARD -->
+  <section class="page" id="page-site-dashboard">
+    <div id="siteDashboardContent"></div>
+  </section>
+
+  <!-- PAGE: PRICING -->
+  <section class="page" id="page-pricing">
+    <div id="pricingContent"></div>
+  </section>
+
+  <!-- PAGE: DOMAIN -->
+  <section class="page" id="page-domain">
+    <div id="domainContent"></div>
+  </section>
+
+  <!-- PAGE: DASHBOARD -->
+  <section class="page" id="page-dashboard">
+    <div id="dashboardContent"></div>
+  </section>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
